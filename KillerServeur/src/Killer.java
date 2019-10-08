@@ -10,7 +10,7 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   }
 
   @Override
-  public Player addPlayer(String name) {
+  public Player addPlayer(String name) throws RemoteException {
     return new PlayerImpl(name);
   }
 }

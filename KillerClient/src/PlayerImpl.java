@@ -1,8 +1,15 @@
-public class PlayerImpl implements Player {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class PlayerImpl extends UnicastRemoteObject implements Player {
+	private static final long serialVersionUID = 1L;
+	
 	private String name;
 	private int healthPoint;
-	
-	public PlayerImpl(String name) {
+
+	public PlayerImpl(String name)  throws RemoteException {
+		super();
+		
 		this.name = name;
 		this.healthPoint = 30;
 	}
