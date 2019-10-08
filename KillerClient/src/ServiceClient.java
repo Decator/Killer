@@ -1,31 +1,16 @@
-import java.rmi.RemoteException;
-
-import javax.swing.JOptionPane;
-
 public class ServiceClient {
-	private KillerService server;
-	private Player player;
+	private KillerService service;
+	private PlayerImpl player;
 	
-	ServiceClient(KillerService server) {
-		this.server = server;
-	}
-	
-	public void getInformation() throws RemoteException {
-		String txt = JOptionPane.showInputDialog("What is your name?");
-		
-		String response = this.server.getInformation(txt);
-		JOptionPane.showMessageDialog(null, response);
+	ServiceClient(KillerService service) {
+		this.service = service;
 	}
 	
 	public void addPlayer(String name) {
-		try {
-			this.player = this.server.addPlayer(name);
-		} catch (RemoteException e) {
-			System.out.println("Votre joueur n'a pas ete cree.");
-		}
+		this.player = (PlayerImpl) this.service.addPlayer(name);
 	}
 	
-	public Player getPlayer() {
+	public PlayerImpl getPlayer() {
 		return this.player;
 	}
 }

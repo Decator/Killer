@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Client extends JFrame implements ActionListener{
+public class Client extends JFrame {
 
 	private static KillerService look_up;
 	private static ServiceClient serviceClient;
@@ -40,20 +40,16 @@ public class Client extends JFrame implements ActionListener{
 		nameField.setColumns(10);
 		panel.add(nameField);
  
-		joinGameButton = new JButton("Rejoindez la game");
-		joinGameButton.addActionListener(this);
+		joinGameButton = new JButton("Rejoignez la game");
+		joinGameButton.addActionListener(new ActionListener() {
+		   public void actionPerformed(ActionEvent e){
+				serviceClient.addPlayer(nameField.getText());
+				System.out.println(serviceClient.getPlayer());
+			   }
+			});
 		panel.add(joinGameButton);
  
 		return panel;
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		 
-		if(source == joinGameButton){
-			serviceClient.addPlayer(nameField.getText());
-			System.out.println(serviceClient.getPlayer());
-		}
 	}
 	
 	public static void main(String[] args) {
