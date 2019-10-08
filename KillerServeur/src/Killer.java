@@ -13,4 +13,10 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   public String getInformation(String txt) throws RemoteException {
     return txt + " est un bg.";
   }
+
+  @Override
+  public Player addPlayer(String name) throws RemoteException {
+    PlayerImpl newPlayer = new PlayerImpl(name);
+    return newPlayer;
+  }
 }
