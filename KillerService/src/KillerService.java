@@ -3,6 +3,6 @@ import java.rmi.RemoteException;
 
 public interface KillerService extends Remote {
    
-   public Player addPlayer(String name) throws RemoteException ;
+   public Player addPlayer(String name) throws RemoteException;
 
 }
