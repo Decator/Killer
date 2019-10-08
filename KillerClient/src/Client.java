@@ -1,5 +1,4 @@
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
@@ -12,18 +11,19 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Client extends JFrame implements ActionListener{
 
 	private static KillerService look_up;
 	private static ServiceClient serviceClient;
 	
+	private JButton joinGameButton;
+	private JTextField nameField;
+	
 	public Client() {
 		super();
-		build();
-	}
- 
-	private void build(){
+		
 		setTitle("Killer");
 		setSize(800,600); 
 		setLocationRelativeTo(null);
@@ -35,21 +35,24 @@ public class Client extends JFrame implements ActionListener{
 	public JPanel buildContentPane(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
+		
+		nameField = new JTextField();
+		nameField.setColumns(10);
+		panel.add(nameField);
  
-		JButton bouton = new JButton("Cliquez ici !");
-		bouton.addActionListener(this);
-		panel.add(bouton);
+		joinGameButton = new JButton("Rejoindez la game");
+		joinGameButton.addActionListener(this);
+		panel.add(joinGameButton);
  
 		return panel;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Clic");
-		
-		try {
-			serviceClient.getInformation();
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
+		Object source = e.getSource();
+		 
+		if(source == joinGameButton){
+			serviceClient.addPlayer(nameField.getText());
+			System.out.println(serviceClient.getPlayer());
 		}
 	}
 	
