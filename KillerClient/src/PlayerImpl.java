@@ -14,8 +14,7 @@ public class PlayerImpl implements Player {
 	
 	@Override
 	public int getHealthPoints() {
-		// TODO Auto-generated method stub
-		return 0;
+		return healthPoint;
 	}
 
 	@Override
