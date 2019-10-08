@@ -1,4 +1,4 @@
 
-public class Player implements Player {
+public class PlayerImpl implements Player {
 
 }
