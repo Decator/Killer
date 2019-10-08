@@ -11,7 +11,6 @@ public class Serveur {
 		      LocateRegistry.createRegistry(1099);
 
 		      String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
-		      System.out.println("Enregistrement de l'objet avec l'url : " + url);
 		      Naming.rebind(url, new Killer());
 
 		      System.out.println("Serveur lancé");

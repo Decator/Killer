@@ -1,27 +1,26 @@
+import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public class Player implements PlayerInterface {
+public class Player implements Remote, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
 	private int healthPoint;
 
-	public Player(String name)  throws RemoteException {		
+	public Player(String name) throws RemoteException {		
 		this.name = name;
 		this.healthPoint = 30;
 	}
 	
-	@Override
 	public String getName() {
-		return this.getName();
+		return this.name;
 	}
 	
-	@Override
 	public int getHealthPoints() {
 		return healthPoint;
 	}
 
-	@Override
 	public void setHealthPoints(int healthPoints) {
 		this.healthPoint = healthPoint;
 	}
