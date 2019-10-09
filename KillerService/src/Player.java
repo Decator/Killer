@@ -4,11 +4,11 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	private int healthPoint;
+	private int healthPoints;
 
 	public Player(String name) {		
 		this.name = name;
-		this.healthPoint = 30;
+		this.healthPoints = 30;
 	}
 	
 	public String getName() {
@@ -16,10 +16,10 @@ public class Player implements Serializable {
 	}
 	
 	public int getHealthPoints() {
-		return healthPoint;
+		return healthPoints;
 	}
 
 	public void setHealthPoints(int healthPoints) {
-		this.healthPoint = healthPoint;
+		this.healthPoints = healthPoints;
 	}
 }

@@ -11,9 +11,14 @@ public class Serveur {
 		      LocateRegistry.createRegistry(1099);
 
 		      String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
-		      Naming.rebind(url, new Killer());
+		      Killer game = new Killer();
+		      Naming.rebind(url, game);
 
-		      System.out.println("Serveur lancé");
+		      System.out.println("Serveur lancÃ©");
+		      
+		      while(game.getPlayers().size() < 4) {
+		      }
+		      
 		    } catch (RemoteException e) {
 				System.err.println("Server exception: " + e.toString());
 				e.printStackTrace();

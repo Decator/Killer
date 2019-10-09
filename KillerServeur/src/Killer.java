@@ -16,6 +16,11 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   public Player addPlayer(String name) throws RemoteException {
 	  Player player = new Player(name);
     this.players.add(player);
+    System.out.println("Nouveau joueur : "+ name);
     return player;
+  }
+  
+  public ArrayList<Player> getPlayers() {
+    return this.players;
   }
 }
