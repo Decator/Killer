@@ -17,8 +17,13 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   public synchronized void addPlayer(PlayerInterface player) throws RemoteException {
     this.players.add(player);
     if(this.players.size() == 4) {
-    	for(PlayerInterface p: players) {
-    		p.initialization();
+    	int number = (int) (Math.random() * (0 - 3));
+    	for(int i=0; i < 4; i++) {
+    		if(i == number) {
+    			this.players.get(i).initialisation(true);
+    		} else {
+    			this.players.get(i).initialisation(false);
+    		}
     	}
     } else {
         player.waiting("En attente d'autres joueurs !");
