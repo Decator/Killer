@@ -13,16 +13,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Client extends JFrame {
-
-	private static KillerService look_up;
+public class Frame extends JFrame {
+	
 	private static ServiceClient serviceClient;
 	
 	private JButton joinGameButton;
 	private JTextField nameField;
 	
-	public Client() {
+	public Frame(KillerService look_up) {
 		super();
+
+		serviceClient = new ServiceClient(look_up);
 		
 		setTitle("Killer");
 		setSize(800,600); 
@@ -54,28 +55,5 @@ public class Client extends JFrame {
 		panel.add(joinGameButton);
  
 		return panel;
-	}
-	
-	public static void main(String[] args) {
-		try {
-			look_up = (KillerService) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
-			serviceClient = new ServiceClient(look_up);
-			
-			Client client = new Client();
-			client.setVisible(true);
-			
-		} catch (MalformedURLException e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-	    } catch (UnknownHostException e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-	    } catch (NotBoundException e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-	    }
 	}
 }
