@@ -58,7 +58,7 @@ public class Client extends JFrame {
 			serviceClient = new ServiceClient(look_up);
 			
 			Client client = new Client();
-			client.show();
+			client.setVisible(true);
 			
 		} catch (MalformedURLException e) {
 			System.err.println("Server exception: " + e.toString());
