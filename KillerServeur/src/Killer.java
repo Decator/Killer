@@ -21,6 +21,7 @@ public class Killer extends UnicastRemoteObject implements KillerService {
     	for(int i=0; i < 4; i++) {
     		if(i == number) {
     			this.players.get(i).initialisation(true);
+    			currentPlayer = this.players.get(i);
     		} else {
     			this.players.get(i).initialisation(false);
     		}
