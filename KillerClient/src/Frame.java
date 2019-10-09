@@ -37,7 +37,7 @@ public class Frame extends JFrame {
 	
 	public JPanel buildContentPane(){
 		JPanel panelStart = new JPanel();
-		panelStart.setBackground(Color.ORANGE);
+		panelStart.setBackground(Color.RED);
 	    this.setContentPane(panelStart); 
 		
 		nameField = new JTextField();
@@ -50,7 +50,7 @@ public class Frame extends JFrame {
 				serviceClient.addPlayer(nameField.getText());
 				
 				JPanel panelWaiting = new JPanel();
-				JLabel waitingText = new JLabel(serviceClient.getPlayer().getWaiting());
+				JLabel waitingText = new JLabel(serviceClient.getPlayer().waiting);
 				panelWaiting.add(waitingText);
 				setContentPane(panelWaiting);
 				validate();

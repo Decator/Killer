@@ -8,11 +8,16 @@ public class Player extends UnicastRemoteObject implements PlayerInterface, Seri
 	private String name;
 	private int healthPoints;
 	
-	private String waiting;
+	public String waiting;
+	public boolean game;
+	public boolean currentPlayer;
 
-	public Player(String name) throws RemoteException {		
+	public Player(String name) throws RemoteException {
 		this.name = name;
 		this.healthPoints = 30;
+		this.waiting = null;
+		this.game = false;
+		this.currentPlayer = false;
 	}
 
 	@Override
@@ -35,8 +40,10 @@ public class Player extends UnicastRemoteObject implements PlayerInterface, Seri
 	  this.waiting = msg;
 
   }
-  
-  public String getWaiting() {
-	  return this.waiting;
-  }
+
+	@Override
+	public void initialisation(boolean currentPlayer) throws RemoteException {
+		this.game = true;
+		this.currentPlayer = currentPlayer;
+	}
 }

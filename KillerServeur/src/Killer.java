@@ -7,16 +7,19 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   private static final long serialVersionUID = 1L;
   
   private ArrayList<PlayerInterface> players = new ArrayList<PlayerInterface>();
+  private PlayerInterface currentPlayer;
 
   protected Killer() throws RemoteException {
     super();
   }
 
   @Override
-  public void addPlayer(PlayerInterface player) throws RemoteException {
+  public synchronized void addPlayer(PlayerInterface player) throws RemoteException {
     this.players.add(player);
     if(this.players.size() == 4) {
-    	
+    	for(PlayerInterface p: players) {
+    		p.initialization();
+    	}
     } else {
         player.waiting("En attente d'autres joueurs !");
     }
