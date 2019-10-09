@@ -44,7 +44,11 @@ public class Client extends JFrame {
 		joinGameButton.addActionListener(new ActionListener() {
 		   public void actionPerformed(ActionEvent e){
 				serviceClient.addPlayer(nameField.getText());
-				System.out.println(serviceClient.getPlayer().getName());
+				try {
+					System.out.println(serviceClient.getPlayer().getName());
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
 			   }
 			});
 		panel.add(joinGameButton);

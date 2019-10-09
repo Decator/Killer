@@ -14,7 +14,7 @@ public class Serveur {
 		      Killer game = new Killer();
 		      Naming.rebind(url, game);
 
-		      System.out.println("Serveur lancé");
+		      System.out.println("Serveur lance");
 		      
 		      while(game.getPlayers().size() < 4) {
 		      }
