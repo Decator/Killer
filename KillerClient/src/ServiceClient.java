@@ -2,7 +2,7 @@ import java.rmi.RemoteException;
 
 public class ServiceClient {
 	private KillerService service;
-	private PlayerInterface player;
+	private Player player;
 	
 	ServiceClient(KillerService service) {
 		this.service = service;
@@ -17,7 +17,7 @@ public class ServiceClient {
 		}
 	}
 	
-	public PlayerInterface getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 }

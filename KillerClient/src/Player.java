@@ -7,26 +7,36 @@ public class Player extends UnicastRemoteObject implements PlayerInterface, Seri
 	
 	private String name;
 	private int healthPoints;
+	
+	private String waiting;
 
 	public Player(String name) throws RemoteException {		
 		this.name = name;
 		this.healthPoints = 30;
 	}
-	
+
+	@Override
 	public String getName() throws RemoteException {
 		return this.name;
 	}
-	
+
+	@Override
 	public int getHealthPoints() throws RemoteException {
 		return healthPoints;
 	}
 
+	@Override
 	public void setHealthPoints(int healthPoints) throws RemoteException {
 		this.healthPoints = healthPoints;
 	}
 
   @Override
-  public void sendMessage(String msg) throws RemoteException {
-    System.out.println(msg);
+  public void waiting(String msg) throws RemoteException {
+	  this.waiting = msg;
+
+  }
+  
+  public String getWaiting() {
+	  return this.waiting;
   }
 }

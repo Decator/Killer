@@ -15,7 +15,11 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   @Override
   public void addPlayer(PlayerInterface player) throws RemoteException {
     this.players.add(player);
-    System.out.println("Nouveau joueur : "+ player.getName());
+    if(this.players.size() == 4) {
+    	
+    } else {
+        player.waiting("En attente d'autres joueurs !");
+    }
   }
   
   public ArrayList<PlayerInterface> getPlayers() {

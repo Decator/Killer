@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -34,26 +36,28 @@ public class Frame extends JFrame {
 	}
 	
 	public JPanel buildContentPane(){
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout());
+		JPanel panelStart = new JPanel();
+		panelStart.setBackground(Color.ORANGE);
+	    this.setContentPane(panelStart); 
 		
 		nameField = new JTextField();
 		nameField.setColumns(10);
-		panel.add(nameField);
+		panelStart.add(nameField);
  
 		joinGameButton = new JButton("Rejoignez la game");
 		joinGameButton.addActionListener(new ActionListener() {
 		   public void actionPerformed(ActionEvent e){
 				serviceClient.addPlayer(nameField.getText());
-				try {
-					System.out.println(serviceClient.getPlayer().getName());
-				} catch (RemoteException e1) {
-					e1.printStackTrace();
-				}
+				
+				JPanel panelWaiting = new JPanel();
+				JLabel waitingText = new JLabel(serviceClient.getPlayer().getWaiting());
+				panelWaiting.add(waitingText);
+				setContentPane(panelWaiting);
+				validate();
 			   }
 			});
-		panel.add(joinGameButton);
+		panelStart.add(joinGameButton);
  
-		return panel;
+		return panelStart;
 	}
 }
