@@ -10,7 +10,8 @@ public class ServiceClient {
 	
 	public void addPlayer(String name) {
 		try {
-			this.player = this.service.addPlayer(name);
+		  this.player = new Player(name);
+			this.service.addPlayer(player);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

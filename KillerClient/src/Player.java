@@ -24,4 +24,9 @@ public class Player extends UnicastRemoteObject implements PlayerInterface, Seri
 	public void setHealthPoints(int healthPoints) throws RemoteException {
 		this.healthPoints = healthPoints;
 	}
+
+  @Override
+  public void sendMessage(String msg) throws RemoteException {
+    System.out.println(msg);
+  }
 }

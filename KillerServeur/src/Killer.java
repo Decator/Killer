@@ -13,14 +13,13 @@ public class Killer extends UnicastRemoteObject implements KillerService {
   }
 
   @Override
-  public PlayerInterface addPlayer(String name) throws RemoteException {
-	  PlayerInterface player = new Player(name);
+  public void addPlayer(PlayerInterface player) throws RemoteException {
     this.players.add(player);
-    System.out.println("Nouveau joueur : "+ name);
-    return player;
+    System.out.println("Nouveau joueur : "+ player.getName());
   }
   
   public ArrayList<PlayerInterface> getPlayers() {
     return this.players;
   }
+
 }

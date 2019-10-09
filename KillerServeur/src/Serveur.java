@@ -17,6 +17,15 @@ public class Serveur {
 		      System.out.println("Serveur lance");
 		      
 		      while(game.getPlayers().size() < 4) {
+		        for (PlayerInterface player : game.getPlayers()) {
+		          player.sendMessage("En attente d'autres joueurs !");
+		          try {
+                Thread.sleep(1000);
+              } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+		        }
 		      }
 		      
 		    } catch (RemoteException e) {
