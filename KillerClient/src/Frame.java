@@ -1,13 +1,9 @@
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements Observer {
 	
 	private static ServiceClient serviceClient;
 	
@@ -24,8 +20,8 @@ public class Frame extends JFrame {
 	
 	public Frame(KillerService look_up) {
 		super();
-
-		serviceClient = new ServiceClient(look_up);
+		
+		serviceClient = new ServiceClient(look_up, this);
 		
 		setTitle("Killer");
 		setSize(800,600); 
@@ -48,16 +44,26 @@ public class Frame extends JFrame {
 		joinGameButton.addActionListener(new ActionListener() {
 		   public void actionPerformed(ActionEvent e){
 				serviceClient.addPlayer(nameField.getText());
-				
-				JPanel panelWaiting = new JPanel();
-				JLabel waitingText = new JLabel(serviceClient.getPlayer().waiting);
-				panelWaiting.add(waitingText);
-				setContentPane(panelWaiting);
-				validate();
 			   }
 			});
 		panelStart.add(joinGameButton);
  
 		return panelStart;
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(serviceClient.getPlayer().getGame()) {
+			JPanel panelGame = new JPanel();
+			panelGame.add(new JLabel("Game"));
+			panelGame.add(new JLabel(serviceClient.getPlayer().getName() +" - CurrentPlayer: "+ serviceClient.getPlayer().getCurrentPlayer()));
+			setContentPane(panelGame);
+			validate();
+		} else if(serviceClient.getPlayer().getWaiting() != null) {
+			JPanel panelWaiting = new JPanel();
+			panelWaiting.add(new JLabel(serviceClient.getPlayer().getWaiting()));
+			setContentPane(panelWaiting);
+			validate();
+		}
 	}
 }
