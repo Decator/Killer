@@ -3,7 +3,6 @@ import javax.swing.JPanel;
 
 public class Waiting extends JPanel {
 	private static Frame frame;
-	private JLabel waiting;
 
 	public Waiting(Frame frame) {
 		super();
@@ -15,8 +14,8 @@ public class Waiting extends JPanel {
 	}
 	
 	public void waitingLabel() {
-		this.waiting = new JLabel(frame.getServiceClient().getPlayer().getWaiting());
-		this.waiting.setBounds(300, 100, 250, 30);
-		this.add(this.waiting);
+		JLabel waiting = new JLabel(frame.getServiceClient().getPlayer().getWaiting());
+		waiting.setBounds(300, 100, 250, 30);
+		this.add(waiting);
 	}
 }

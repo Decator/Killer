@@ -10,10 +10,6 @@ public class Frame extends JFrame implements Observer {
 	
 	private ServiceClient serviceClient;
 	
-	// Panels variables
-	private Menu menu;
-	private Waiting waiting;
-	
 	private CardLayout card;
 	private JPanel content;
 	
@@ -31,8 +27,8 @@ public class Frame extends JFrame implements Observer {
 		this.card = new CardLayout();
 		this.content.setLayout(this.card);
 		
-		this.menu = new Menu(this);
-		this.content.add(this.menu, "Menu");
+		Menu menu = new Menu(this);
+		this.content.add(menu, "Menu");
 		this.getContentPane().add(this.content);
 
 		this.setVisible(true);
@@ -46,23 +42,21 @@ public class Frame extends JFrame implements Observer {
 	public void switchPage(String page) {
 		this.card.show(this.content, page);
 	}
-	
-	public ServiceClient getServiceClient() {
-		return this.serviceClient;
-	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		if(serviceClient.getPlayer().getGame()) {
-			/*JPanel panelGame = new JPanel();
-			panelGame.add(new JLabel("<h1>Game</h1>"));
-			panelGame.add(new JLabel(serviceClient.getPlayer().getName() +" - CurrentPlayer: "+ serviceClient.getPlayer().getCurrentPlayer()));
-			setContentPane(panelGame);
-			validate();*/
+			Game game = new Game(this);
+			this.content.add(game, "Game");
+			switchPage("Game");
 		} else if(serviceClient.getPlayer().getWaiting() != null) {
-			this.waiting = new Waiting(this);
-			this.content.add(this.waiting, "Waiting");
+			Waiting waiting = new Waiting(this);
+			this.content.add(waiting, "Waiting");
 			switchPage("Waiting");
 		}		
+	}
+
+	public ServiceClient getServiceClient() {
+		return this.serviceClient;
 	}
 }

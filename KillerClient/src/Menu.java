@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 public class Menu extends JPanel {
 	private static Frame frame;
 	private JTextField nameField;
-	private JButton joinGameButton;
 
 	public Menu(Frame frame) {
 		super();
@@ -28,14 +27,14 @@ public class Menu extends JPanel {
 	}
 	
 	public void joinGameButton() {
-		this.joinGameButton = new JButton("Rejoignez la game");
-		this.joinGameButton.addActionListener(new ActionListener() {
+		JButton joinGameButton = new JButton("Rejoignez la game");
+		joinGameButton.addActionListener(new ActionListener() {
 		   public void actionPerformed(ActionEvent e){
 			   frame.getServiceClient().addPlayer(nameField.getText());
 			   frame.switchPage("Waiting"); //Go on the Menu page
 			   }
 			});
-		this.joinGameButton.setBounds(300, 150, 200, 50);
-		this.add(this.joinGameButton);
+		joinGameButton.setBounds(300, 150, 200, 50);
+		this.add(joinGameButton);
 	}
 }
