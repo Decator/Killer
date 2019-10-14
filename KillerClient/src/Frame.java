@@ -1,69 +1,68 @@
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
+
+import java.awt.CardLayout;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class Frame extends JFrame implements Observer {
 	
-	private static ServiceClient serviceClient;
+	private ServiceClient serviceClient;
 	
-	private JButton joinGameButton;
-	private JTextField nameField;
+	// Panels variables
+	private Menu menu;
+	private Waiting waiting;
+	
+	private CardLayout card;
+	private JPanel content;
 	
 	public Frame(KillerService look_up) {
-		super();
+		super("Killer");
 		
 		serviceClient = new ServiceClient(look_up, this);
 		
-		setTitle("Killer");
 		setSize(800,600); 
 		setLocationRelativeTo(null);
 		setResizable(false); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(buildContentPane());
+		
+		this.content = new JPanel();
+		this.card = new CardLayout();
+		this.content.setLayout(this.card);
+		
+		this.menu = new Menu(this);
+		this.content.add(this.menu, "Menu");
+		this.getContentPane().add(this.content);
+
+		this.setVisible(true);
+		this.setResizable(false);
 	}
 	
-	public JPanel buildContentPane(){
-		JPanel panelStart = new JPanel();
-		panelStart.setBackground(Color.RED);
-	    this.setContentPane(panelStart); 
-		
-		nameField = new JTextField();
-		nameField.setColumns(10);
-		panelStart.add(nameField);
- 
-		joinGameButton = new JButton("Rejoignez la game");
-		joinGameButton.addActionListener(new ActionListener() {
-		   public void actionPerformed(ActionEvent e){
-				serviceClient.addPlayer(nameField.getText());
-			   }
-			});
-		panelStart.add(joinGameButton);
- 
-		return panelStart;
+	/**
+	* This method allows to switch page
+	* @param page It's the new page(panel)
+	*/
+	public void switchPage(String page) {
+		this.card.show(this.content, page);
+	}
+	
+	public ServiceClient getServiceClient() {
+		return this.serviceClient;
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(Observable o, Object arg) {
 		if(serviceClient.getPlayer().getGame()) {
-			JPanel panelGame = new JPanel();
-			panelGame.add(new JLabel("Game"));
+			/*JPanel panelGame = new JPanel();
+			panelGame.add(new JLabel("<h1>Game</h1>"));
 			panelGame.add(new JLabel(serviceClient.getPlayer().getName() +" - CurrentPlayer: "+ serviceClient.getPlayer().getCurrentPlayer()));
 			setContentPane(panelGame);
-			validate();
+			validate();*/
 		} else if(serviceClient.getPlayer().getWaiting() != null) {
-			JPanel panelWaiting = new JPanel();
-			panelWaiting.add(new JLabel(serviceClient.getPlayer().getWaiting()));
-			setContentPane(panelWaiting);
-			validate();
-		}
+			this.waiting = new Waiting(this);
+			this.content.add(this.waiting, "Waiting");
+			switchPage("Waiting");
+		}		
 	}
 }

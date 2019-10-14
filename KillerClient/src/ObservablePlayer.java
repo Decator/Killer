@@ -1,3 +1,4 @@
+
 import java.util.Observable;
 
 public class ObservablePlayer extends Observable {
