@@ -7,16 +7,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Frame extends JFrame implements Observer {
+
+	public static Frame frame;
 	
-	private ServiceClient serviceClient;
-	
+	public ServiceClient serviceClient;
 	private CardLayout card;
 	private JPanel content;
+	private JGame game;
+	private JWaiting waiting;
 	
-	public Frame(KillerService look_up) {
+	public Frame(KillerInterface look_up) {
 		super("Killer");
 		
-		serviceClient = new ServiceClient(look_up, this);
+		this.serviceClient = new ServiceClient(look_up);
+		frame = this;
 		
 		setSize(800,600); 
 		setLocationRelativeTo(null);
@@ -27,7 +31,7 @@ public class Frame extends JFrame implements Observer {
 		this.card = new CardLayout();
 		this.content.setLayout(this.card);
 		
-		Menu menu = new Menu(this);
+		JMenu menu = new JMenu();
 		this.content.add(menu, "Menu");
 		this.getContentPane().add(this.content);
 
@@ -42,21 +46,27 @@ public class Frame extends JFrame implements Observer {
 	public void switchPage(String page) {
 		this.card.show(this.content, page);
 	}
+	
+	public ServiceClient getServiceClient() {
+		return serviceClient;
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(serviceClient.getPlayer().getGame()) {
-			Game game = new Game(this);
-			this.content.add(game, "Game");
-			switchPage("Game");
-		} else if(serviceClient.getPlayer().getWaiting() != null) {
-			Waiting waiting = new Waiting(this);
+		if(arg.equals("waiting")) {
+			this.waiting = new JWaiting();
 			this.content.add(waiting, "Waiting");
 			switchPage("Waiting");
-		}		
-	}
-
-	public ServiceClient getServiceClient() {
-		return this.serviceClient;
+		} else if(arg.equals("initialisation")) {
+			serviceClient.getPlayers();
+		} else if(arg.equals("setPlayers")) {
+			this.game = new JGame(serviceClient.getPlayer());
+			this.content.add(game, "Game");
+			switchPage("Game");
+		} else if(arg.equals("rollTheDice")) {
+			this.game.dicesPanel();
+		} else if(arg.equals("score")) {
+			this.game.scoreLabel();
+		}
 	}
 }

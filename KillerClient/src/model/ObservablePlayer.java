@@ -2,8 +2,8 @@
 import java.util.Observable;
 
 public class ObservablePlayer extends Observable {
-	public void notifyFrame() {
+	public void notifyFrame(String s) {
         setChanged();
-        notifyObservers();
+        notifyObservers(s);
 	}
 }

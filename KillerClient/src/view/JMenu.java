@@ -5,15 +5,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Menu extends JPanel {
-	private static Frame frame;
+public class JMenu extends JPanel {
 	private JTextField nameField;
 
-	public Menu(Frame frame) {
+	public JMenu() {
 		super();
 	
 		this.setLayout(null);
-		this.frame = frame;
 	    
 	    nameField();
 	    joinGameButton();
@@ -29,11 +27,11 @@ public class Menu extends JPanel {
 	public void joinGameButton() {
 		JButton joinGameButton = new JButton("Rejoignez la game");
 		joinGameButton.addActionListener(new ActionListener() {
-		   public void actionPerformed(ActionEvent e){
-			   frame.getServiceClient().addPlayer(nameField.getText());
-			   frame.switchPage("Waiting"); //Go on the Menu page
-			   }
-			});
+			public void actionPerformed(ActionEvent e){
+				Frame.frame.getServiceClient().addPlayer(nameField.getText());
+				Frame.frame.switchPage("Waiting"); //Go on the Menu page
+			}
+		});
 		joinGameButton.setBounds(300, 150, 200, 50);
 		this.add(joinGameButton);
 	}

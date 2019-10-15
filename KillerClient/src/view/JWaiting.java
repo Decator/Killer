@@ -1,20 +1,18 @@
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Waiting extends JPanel {
-	private static Frame frame;
+public class JWaiting extends JPanel {
 
-	public Waiting(Frame frame) {
+	public JWaiting() {
 		super();
 	
 		this.setLayout(null);
-		this.frame = frame;
 	    
 		waitingLabel();
 	}
 	
 	public void waitingLabel() {
-		JLabel waiting = new JLabel(frame.getServiceClient().getPlayer().getWaiting());
+		JLabel waiting = new JLabel(Frame.frame.getServiceClient().getPlayer().getWaiting());
 		waiting.setBounds(300, 100, 250, 30);
 		this.add(waiting);
 	}
