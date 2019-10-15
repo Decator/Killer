@@ -11,4 +11,5 @@ public interface PlayerInterface extends Remote {
 	public void setDices(int[] rollTheDice) throws RemoteException;
 	public void setPlayers(ArrayList<PlayerInterface> players) throws RemoteException;
 	public void setScore(int score) throws RemoteException;
+	public void endTurn(boolean currentPlayer) throws RemoteException;
 }

@@ -6,4 +6,5 @@ public interface KillerInterface extends Remote {
    public void getPlayers() throws RemoteException;
    public void rollTheDice(int diceNumber) throws RemoteException;
    public void setScore(int score) throws RemoteException;
+   public void endTurn() throws RemoteException;
 }

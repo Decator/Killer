@@ -55,18 +55,21 @@ public class Frame extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		if(arg.equals("waiting")) {
 			this.waiting = new JWaiting();
-			this.content.add(waiting, "Waiting");
+			this.content.add(this.waiting, "Waiting");
 			switchPage("Waiting");
 		} else if(arg.equals("initialisation")) {
 			serviceClient.getPlayers();
 		} else if(arg.equals("setPlayers")) {
 			this.game = new JGame(serviceClient.getPlayer());
-			this.content.add(game, "Game");
+			this.content.add(this.game, "Game");
 			switchPage("Game");
 		} else if(arg.equals("rollTheDice")) {
 			this.game.dicesPanel();
 		} else if(arg.equals("score")) {
 			this.game.scoreLabel();
+		} else if(arg.equals("turn")) {
+			this.game = new JGame(serviceClient.getPlayer());
+			this.content.add(this.game, "Game");
 		}
 	}
 }

@@ -11,6 +11,11 @@ public class ServiceClient {
 		this.service = service;
 	}
 	
+	
+	public Killer getPlayer() {
+		return this.killer;
+	}
+	
 	public void addPlayer(String name) {
 		try {
 			this.killer = new Killer(name);
@@ -45,8 +50,12 @@ public class ServiceClient {
 			e.printStackTrace();
 		}
 	}
-	
-	public Killer getPlayer() {
-		return this.killer;
+
+	public void endTurn() {
+		try {
+			this.service.endTurn();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}		
 	}
 }

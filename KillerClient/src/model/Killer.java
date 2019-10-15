@@ -105,4 +105,10 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	public int getScore() {
 		return this.score;
 	}
+	
+	@Override
+	public void endTurn(boolean currentPlayer) throws RemoteException {
+		this.currentPlayer = currentPlayer;
+		this.observablePlayer.notifyFrame("turn");
+	}
 }

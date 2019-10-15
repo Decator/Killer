@@ -12,6 +12,7 @@ public class JGame extends JPanel {
 	private JPanel dicesPanel;
 	private JButton rollDiceLabel;
 	private JLabel scoreLabel;
+	private int numberClick;
 
 	public JGame(Killer killer) {
 		super();
@@ -20,6 +21,7 @@ public class JGame extends JPanel {
 		this.dicesPanel = null;
 		this.rollDiceLabel = null;
 		this.scoreLabel = null;
+		this.numberClick = 0;
 	
 		this.setLayout(null);
 		
@@ -45,12 +47,16 @@ public class JGame extends JPanel {
 	public void rollDiceLabel() {
 		if(this.rollDiceLabel != null) {
 			this.remove(rollDiceLabel);
-			this.killer.setDices(new int[this.killer.getDices().length - 1]);
 		}
 		this.rollDiceLabel = new JButton("Lancez les dés");
 		rollDiceLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				Frame.frame.getServiceClient().rollTheDice(killer.getDices().length);
+				if(killer.getDices().length - numberClick <= 0) {
+					endRoll();
+				} else {
+					Frame.frame.getServiceClient().rollTheDice(killer.getDices().length - numberClick);
+				}
+				numberClick = 0;
 			}
 		});
 		if(!this.killer.getCurrentPlayer()) {
@@ -73,6 +79,7 @@ public class JGame extends JPanel {
 				b.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e){
 						Frame.frame.getServiceClient().setScore(b);
+						numberClick++;
 						b.setEnabled(false);
 					}
 				});
@@ -101,6 +108,26 @@ public class JGame extends JPanel {
 		this.add(this.scoreLabel);
 		this.revalidate();
 		this.repaint();
+	}
+	
+	public void endRoll() {
+		try {
+			int losePoint = 0;
+			if((this.killer.getHealthPoints() + this.killer.getScore() - 30) >= (this.killer.getHealthPoints() - this.killer.getScore() + 12)) {
+				losePoint = this.killer.getHealthPoints() + this.killer.getScore() - 30;
+			} else {
+				losePoint = this.killer.getHealthPoints() - this.killer.getScore() + 12;
+			}
+			this.killer.setHealthPoints(losePoint);
+			
+			if (this.killer.getScore() < 12  || this.killer.getScore() > 30) {
+				//Attaque
+			} else {
+				Frame.frame.getServiceClient().endTurn();
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
