@@ -46,10 +46,10 @@ public class JGame extends JPanel {
 	
 	public void rollDiceLabel() {
 		if(this.rollDiceLabel != null) {
-			this.remove(rollDiceLabel);
+			this.remove(this.rollDiceLabel);
 		}
 		this.rollDiceLabel = new JButton("Lancez les dés");
-		rollDiceLabel.addActionListener(new ActionListener() {
+		this.rollDiceLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				if(killer.getDices().length - numberClick <= 0) {
 					endRoll();
@@ -57,21 +57,22 @@ public class JGame extends JPanel {
 					Frame.frame.getServiceClient().rollTheDice(killer.getDices().length - numberClick);
 				}
 				numberClick = 0;
+				rollDiceLabel.setEnabled(false);
 			}
 		});
 		if(!this.killer.getCurrentPlayer()) {
-			rollDiceLabel.setEnabled(false);
+			this.rollDiceLabel.setEnabled(false);
 		}
-		rollDiceLabel.setBounds(300, 500, 200, 50);
-		this.add(rollDiceLabel);
+		this.rollDiceLabel.setBounds(300, 500, 200, 50);
+		this.add(this.rollDiceLabel);
 	}
 	
 	public void dicesPanel() {
 		if(this.dicesPanel != null) {
-			this.remove(dicesPanel);
+			this.remove(this.dicesPanel);
 		}
 		this.dicesPanel = new JPanel();
-		dicesPanel.setLayout(new GridLayout(1, this.killer.getDices().length));
+		this.dicesPanel.setLayout(new GridLayout(1, this.killer.getDices().length));
 		
 		if(this.killer.getCurrentPlayer()) {
 			for(int i=0; i < this.killer.getDices().length; i++) {
@@ -81,19 +82,20 @@ public class JGame extends JPanel {
 						Frame.frame.getServiceClient().setScore(b);
 						numberClick++;
 						b.setEnabled(false);
+						rollDiceLabel.setEnabled(true);
 					}
 				});
-				dicesPanel.add(b);
+				this.dicesPanel.add(b);
 			}
 		} else {
 			for(int i=0; i < this.killer.getDices().length; i++) {
 				JButton b = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.killer.getDices()[i] +"</p></html>");
 				b.setEnabled(false);
-				dicesPanel.add(b);
+				this.dicesPanel.add(b);
 			}
 		}
-		dicesPanel.setBounds(250, 275, 300, 50);
-		this.add(dicesPanel);
+		this.dicesPanel.setBounds(250, 275, 300, 50);
+		this.add(this.dicesPanel);
 		
 		this.revalidate();
 		this.repaint();

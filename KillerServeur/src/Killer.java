@@ -46,7 +46,7 @@ public class Killer extends UnicastRemoteObject implements KillerInterface {
 	public void rollTheDice(int diceNumber) throws RemoteException {
 		int[] dices = new int[diceNumber];
 		for(int i=0; i < dices.length; i++) {
-			dices[i] = (int) (Math.random() * 4.99999) + 1;
+			dices[i] = (int) (Math.random() * 5.99999) + 1;
 		}
 		for(PlayerInterface p: this.players) {
 			p.setDices(dices);
