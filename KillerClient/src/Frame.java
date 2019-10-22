@@ -48,7 +48,7 @@ public class Frame extends JFrame implements Observer {
 	}
 	
 	public ServiceClient getServiceClient() {
-		return serviceClient;
+		return this.serviceClient;
 	}
 
 	@Override
@@ -58,18 +58,19 @@ public class Frame extends JFrame implements Observer {
 			this.content.add(this.waiting, "Waiting");
 			switchPage("Waiting");
 		} else if(arg.equals("initialisation")) {
-			serviceClient.getPlayers();
+			System.out.println("initialisation");
+			this.serviceClient.getPlayers();
 		} else if(arg.equals("setPlayers")) {
-			this.game = new JGame(serviceClient.getPlayer());
+			if(this.game != null) {
+				this.content.remove(this.game);
+			}
+			this.game = new JGame(this.serviceClient.getKiller());
 			this.content.add(this.game, "Game");
 			switchPage("Game");
 		} else if(arg.equals("rollTheDice")) {
 			this.game.dicesPanel();
 		} else if(arg.equals("score")) {
 			this.game.scoreLabel();
-		} else if(arg.equals("turn")) {
-			this.game = new JGame(serviceClient.getPlayer());
-			this.content.add(this.game, "Game");
 		}
 	}
 }

@@ -13,7 +13,6 @@ public class Main {
 		      String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
 		      Killer game = new Killer();
 		      Naming.rebind(url, game);
-
 		      System.out.println("Serveur lance");
 		      
 		    } catch (RemoteException e) {

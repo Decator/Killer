@@ -11,7 +11,6 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	private int healthPoints;
 	private ObservablePlayer observablePlayer;
 	private String waiting;
-	private boolean game;
 	private boolean currentPlayer;
 	private ArrayList<PlayerInterface> players;
 	private int[] dices;
@@ -21,14 +20,12 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 		this.name = name;
 		this.healthPoints = 30;
 		this.waiting = "";
-		this.game = false;
 		this.currentPlayer = false;
 		this.players = new ArrayList<PlayerInterface>();
 		this.dices = new int[6];
 		this.score = 0;
 		
 		this.observablePlayer = new ObservablePlayer();
-		this.observablePlayer.notifyFrame("init");
 	}
 
 	public ObservablePlayer getObservablePlayer() {
@@ -52,7 +49,6 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 
 	public void setHealthPoints(int healthPoints) throws RemoteException {
 		this.healthPoints = healthPoints;
-		this.observablePlayer.notifyFrame("healthPoints");
 	}
 
 	@Override
@@ -62,18 +58,12 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	}
 
 	@Override
-	public void initialisation(boolean currentPlayer) throws RemoteException {
-		this.game = true;
-		this.currentPlayer = currentPlayer;
+	public void initialisation() throws RemoteException {
 		this.observablePlayer.notifyFrame("initialisation");
 	}
 	
 	public String getWaiting() {
 		return this.waiting;
-	}
-	
-	public boolean getGame() {
-		return this.game;
 	}
 	
 	@Override
@@ -107,8 +97,14 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	}
 	
 	@Override
-	public void endTurn(boolean currentPlayer) throws RemoteException {
+	public void endTurn() throws RemoteException {
+		this.dices = new int[6];
+		this.score = 0;
+		this.observablePlayer.notifyFrame("initialisation");
+	}
+
+	@Override
+	public void setCurrentPlayer(boolean currentPlayer) throws RemoteException {
 		this.currentPlayer = currentPlayer;
-		this.observablePlayer.notifyFrame("turn");
 	}
 }

@@ -7,9 +7,10 @@ public interface PlayerInterface extends Remote {
 	public boolean getCurrentPlayer() throws RemoteException;
 	public int getHealthPoints() throws RemoteException;
 	public void waiting(String msg) throws RemoteException;
-	public void initialisation(boolean currentPlayer) throws RemoteException;
+	public void initialisation() throws RemoteException;
 	public void setDices(int[] rollTheDice) throws RemoteException;
 	public void setPlayers(ArrayList<PlayerInterface> players) throws RemoteException;
 	public void setScore(int score) throws RemoteException;
-	public void endTurn(boolean currentPlayer) throws RemoteException;
+	public void endTurn() throws RemoteException;
+	public void setCurrentPlayer(boolean currentPlayer) throws RemoteException;
 }
