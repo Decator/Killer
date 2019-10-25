@@ -14,9 +14,10 @@ public class Frame extends JFrame implements Observer {
 	private CardLayout card;
 	private JPanel content;
 	private JGame game;
+	private JAttack attack;
 	private JWaiting waiting;
 	
-	public Frame(KillerInterface look_up) {
+	public Frame(ServerInterface look_up) {
 		super("Killer");
 		
 		this.serviceClient = new ServiceClient(look_up);
@@ -31,8 +32,7 @@ public class Frame extends JFrame implements Observer {
 		this.card = new CardLayout();
 		this.content.setLayout(this.card);
 		
-		JMenu menu = new JMenu();
-		this.content.add(menu, "Menu");
+		this.content.add(new JMenu(), "Menu");
 		this.getContentPane().add(this.content);
 
 		this.setVisible(true);
@@ -50,6 +50,10 @@ public class Frame extends JFrame implements Observer {
 	public ServiceClient getServiceClient() {
 		return this.serviceClient;
 	}
+	
+	public JAttack getAttack() {
+		return this.attack;
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
@@ -58,19 +62,26 @@ public class Frame extends JFrame implements Observer {
 			this.content.add(this.waiting, "Waiting");
 			switchPage("Waiting");
 		} else if(arg.equals("initialisation")) {
-			System.out.println("initialisation");
 			this.serviceClient.getPlayers();
 		} else if(arg.equals("setPlayers")) {
 			if(this.game != null) {
 				this.content.remove(this.game);
 			}
-			this.game = new JGame(this.serviceClient.getKiller());
+			this.game = new JGame(this.serviceClient.getClient());
 			this.content.add(this.game, "Game");
 			switchPage("Game");
 		} else if(arg.equals("rollTheDice")) {
 			this.game.dicesPanel();
 		} else if(arg.equals("score")) {
 			this.game.scoreLabel();
+		} else if(arg.equals("attack")) {
+			if(this.attack != null) {
+				this.content.remove(this.attack);
+			}
+			System.out.println("frame attack");
+			this.attack = new JAttack(this.serviceClient.getClient());
+			this.content.add(this.attack, "Attack");
+			switchPage("Attack");
 		}
 	}
 }

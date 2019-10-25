@@ -3,23 +3,23 @@ import java.rmi.RemoteException;import java.util.ArrayList;
 import javax.swing.JButton;
 
 public class ServiceClient {
-	private KillerInterface service;
-	private Killer killer;
+	private ServerInterface service;
+	private Client client;
 	private ArrayList<PlayerInterface> players;
 	
-	ServiceClient(KillerInterface service) {
+	ServiceClient(ServerInterface service) {
 		this.service = service;
 	}
 	
-	public Killer getKiller() {
-		return this.killer;
+	public Client getClient() {
+		return this.client;
 	}
 	
 	public void addPlayer(String name) {
 		try {
-			this.killer = new Killer(name);
-			this.killer.getObservablePlayer().addObserver(Frame.frame);
-			this.service.addPlayer(killer);
+			this.client = new Client(name);
+			this.client.getObservablePlayer().addObserver(Frame.frame);
+			this.service.addPlayer(client);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -29,7 +29,7 @@ public class ServiceClient {
 	
 	public void getPlayers() {
 		try {
-			this.service.getPlayers(this.killer.getName());
+			this.service.getPlayers(this.client.getName());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +37,6 @@ public class ServiceClient {
 	
 	public void rollTheDice(int diceNumber) {
 		try {
-			System.out.println("Client: " +diceNumber);
 			this.service.rollTheDice(diceNumber);
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -46,7 +45,7 @@ public class ServiceClient {
 	
 	public void setScore(JButton b) {
 		try {
-			this.service.setScore(Integer.parseInt(b.getText().split(">")[2].split("<")[0]) + this.killer.getScore());
+			this.service.setScore(Integer.parseInt(b.getText().split(">")[2].split("<")[0]) + this.client.getScore());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -58,5 +57,13 @@ public class ServiceClient {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}		
+	}
+
+	public void attack(String attacker, String target) {
+		try {
+			this.service.attack(attacker, target);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 }

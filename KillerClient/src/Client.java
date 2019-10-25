@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 	  
-public class Killer extends UnicastRemoteObject implements PlayerInterface, Serializable {
+public class Client extends UnicastRemoteObject implements PlayerInterface, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
@@ -15,8 +15,12 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	private ArrayList<PlayerInterface> players;
 	private int[] dices;
 	private int score;
+	private int attack;
+	private PlayerInterface attacker;
+	private PlayerInterface target;
+	private int tampon;
 
-	public Killer(String name) throws RemoteException {
+	public Client(String name) throws RemoteException {
 		this.name = name;
 		this.healthPoints = 30;
 		this.waiting = "";
@@ -24,6 +28,7 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 		this.players = new ArrayList<PlayerInterface>();
 		this.dices = new int[6];
 		this.score = 0;
+		this.attack = 0;
 		
 		this.observablePlayer = new ObservablePlayer();
 	}
@@ -77,8 +82,8 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	}
 	
 	@Override
-	public void setDices(int[] rollTheDice) {
-		this.dices = rollTheDice;
+	public void setDices(int[] dices) {
+		this.dices = dices;
 		this.observablePlayer.notifyFrame("rollTheDice");
 	}
 	
@@ -96,6 +101,10 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 		return this.score;
 	}
 	
+	public int getAttack() {
+		return this.attack;
+	}
+	
 	@Override
 	public void endTurn() throws RemoteException {
 		this.dices = new int[6];
@@ -106,5 +115,46 @@ public class Killer extends UnicastRemoteObject implements PlayerInterface, Seri
 	@Override
 	public void setCurrentPlayer(boolean currentPlayer) throws RemoteException {
 		this.currentPlayer = currentPlayer;
+	}
+	
+	public PlayerInterface getAttackPlayer() {
+		return this.attacker;
+	}
+	
+	public PlayerInterface getTargetPlayer() {
+		return this.target;
+	}
+	
+	public void getTamponValue() {
+		if(this.tampon == -1) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		this.healthPoints -= this.tampon;
+		this.tampon = -1;
+		Frame.frame.getServiceClient().endTurn();
+	}
+	
+	@Override
+	public void setTamponValue(int value) throws RemoteException {
+		this.tampon = value;
+		notify();
+	}
+
+	@Override
+	public void attack(PlayerInterface attacker, PlayerInterface target) throws RemoteException {
+		System.out.println("client attack");
+		this.attacker = attacker;
+		this.target = target;
+		if(this.score < 12) {
+			this.attack = 12 - this.score;
+		} else {
+			this.attack = this.score - 30;
+		}
+		this.score = 0;
+		this.observablePlayer.notifyFrame("attack");
 	}
 }

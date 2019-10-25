@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class JGame extends JPanel {
 	
-	private Killer killer;
+	private Client client;
 	private JPanel dicesPanel;
 	private JButton rollDiceLabel;
 	private JButton endTurnLabel;
@@ -20,12 +20,12 @@ public class JGame extends JPanel {
 	private JLabel scoreLabel;
 	private int numberClick;
 
-	public JGame(Killer killer) {
+	public JGame(Client client) {
 		super();
 		
 		this.setLayout(null);
 		
-		this.killer = killer;
+		this.client = client;
 		this.dicesPanel = null;
 		this.rollDiceLabel = null;
 		this.endTurnLabel = null;
@@ -46,11 +46,10 @@ public class JGame extends JPanel {
 		this.myPanel = new JPanel();
 		this.myPanel.setLayout(new GridLayout(1, 1));
 		try {
-			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.killer.getName() +"<br/><p style='text-align: center'>"+ this.killer.getHealthPoints() +"</p></html>");
-			if(this.killer.getCurrentPlayer()) {
+			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getName() +"<br/><p style='text-align: center'>"+ this.client.getHealthPoints() +"</p></html>");
+			if(this.client.getCurrentPlayer()) {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
 			} else {
-				System.out.println("else");
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
 			playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -65,9 +64,9 @@ public class JGame extends JPanel {
 	public void playersPanel() {
 		this.playersPanel = new JPanel();
 		this.playersPanel.setLayout(new GridLayout(1, 3));
-		for(PlayerInterface p: this.killer.getPlayers()) {
+		for(PlayerInterface p: this.client.getPlayers()) {
 			try {
-				if(!p.getName().equals(this.killer.getName())) {
+				if(!p.getName().equals(this.client.getName())) {
 					JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ p.getName() +"<br/><p style='text-align: center'>"+ p.getHealthPoints() +"</p></html>");
 					if(p.getCurrentPlayer()) {
 						playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -95,16 +94,12 @@ public class JGame extends JPanel {
 		this.rollDiceLabel = new JButton("Lancez les dés");
 		this.rollDiceLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-//				if(killer.getDices().length - numberClick <= 0) {
-//					endRoll();
-//				} else {
-					Frame.frame.getServiceClient().rollTheDice(killer.getDices().length - numberClick);
-//				}
+				Frame.frame.getServiceClient().rollTheDice(client.getDices().length - numberClick);
 				numberClick = 0;
 				rollDiceLabel.setEnabled(false);
 			}
 		});
-		if(!this.killer.getCurrentPlayer()) {
+		if(!this.client.getCurrentPlayer()) {
 			this.rollDiceLabel.setEnabled(false);
 		}
 		this.rollDiceLabel.setBounds(300, 500, 200, 50);
@@ -124,16 +119,12 @@ public class JGame extends JPanel {
 		this.endTurnLabel = new JButton("Fin du tour");
 		this.endTurnLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-//				if(killer.getDices().length - numberClick <= 0) {
-					endRoll();
-//				} else {
-//					Frame.frame.getServiceClient().rollTheDice(killer.getDices().length - numberClick);
-//				}
+				endRoll();
 				numberClick = 0;
 				endTurnLabel.setEnabled(false);
 			}
 		});
-		if(!this.killer.getCurrentPlayer()) {
+		if(!this.client.getCurrentPlayer()) {
 			this.endTurnLabel.setEnabled(false);
 		}
 		this.endTurnLabel.setBounds(300, 500, 200, 50);
@@ -148,30 +139,30 @@ public class JGame extends JPanel {
 			this.remove(this.dicesPanel);
 		}
 		this.dicesPanel = new JPanel();
-		this.dicesPanel.setLayout(new GridLayout(1, this.killer.getDices().length));
+		this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
 		
-		if(this.killer.getCurrentPlayer()) {
-			for(int i=0; i < this.killer.getDices().length; i++) {
-				JButton b = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.killer.getDices()[i] +"</p></html>");
-				b.addActionListener(new ActionListener() {
+		if(this.client.getCurrentPlayer()) {
+			for(int i=0; i < this.client.getDices().length; i++) {
+				JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
+				dice.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e){
-						Frame.frame.getServiceClient().setScore(b);
+						Frame.frame.getServiceClient().setScore(dice);
 						numberClick++;
-						b.setEnabled(false);
-						if(killer.getDices().length - numberClick <= 0) {
+						dice.setEnabled(false);
+						if(client.getDices().length - numberClick <= 0) {
 							endTurnLabel();
 						} else {
 							rollDiceLabel.setEnabled(true);
 						}
 					}
 				});
-				this.dicesPanel.add(b);
+				this.dicesPanel.add(dice);
 			}
 		} else {
-			for(int i=0; i < this.killer.getDices().length; i++) {
-				JButton b = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.killer.getDices()[i] +"</p></html>");
-				b.setEnabled(false);
-				this.dicesPanel.add(b);
+			for(int i=0; i < this.client.getDices().length; i++) {
+				JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
+				dice.setEnabled(false);
+				this.dicesPanel.add(dice);
 			}
 		}
 		this.dicesPanel.setBounds(250, 275, 300, 50);
@@ -185,7 +176,7 @@ public class JGame extends JPanel {
 		if(this.scoreLabel != null) {
 			this.remove(scoreLabel);
 		}
-		this.scoreLabel = new JLabel("<html><h2 style='font-weight: bold;'>"+ killer.getScore() +"</h2></html>");
+		this.scoreLabel = new JLabel("<html><h2 style='font-weight: bold;'>"+ client.getScore() +"</h2></html>");
 		this.scoreLabel.setBounds(700, 500, 100, 50);
 		this.add(this.scoreLabel);
 		this.revalidate();
@@ -195,16 +186,14 @@ public class JGame extends JPanel {
 	public void endRoll() {
 		try {
 			int losePoint = 0;
-			if((this.killer.getHealthPoints() + this.killer.getScore() - 30) >= (this.killer.getHealthPoints() - this.killer.getScore() + 12)) {
-				losePoint = this.killer.getHealthPoints() + this.killer.getScore() - 30;
+			if((this.client.getHealthPoints() + this.client.getScore() - 30) >= (this.client.getHealthPoints() - this.client.getScore() + 12)) {
+				losePoint = this.client.getHealthPoints() + this.client.getScore() - 30;
 			} else {
-				losePoint = this.killer.getHealthPoints() - this.killer.getScore() + 12;
+				losePoint = this.client.getHealthPoints() - this.client.getScore() + 12;
 			}
-			this.killer.setHealthPoints(losePoint);
+			this.client.setHealthPoints(losePoint);
 			
-			if (this.killer.getScore() < 12) {
-				attackButton();
-			} else if (this.killer.getScore() > 30) {
+			if (this.client.getScore() < 12 || this.client.getScore() > 30) {
 				attackButton();
 			} else {
 				Frame.frame.getServiceClient().endTurn();
@@ -216,11 +205,21 @@ public class JGame extends JPanel {
 	
 	public void attackButton() {
 		this.playersPanel = null;
+		this.playersPanel = new JPanel();
 		this.playersPanel.setLayout(new GridLayout(1, 3));
-		for(PlayerInterface p: this.killer.getPlayers()) {
+		for(PlayerInterface p: this.client.getPlayers()) {
 			try {
-				if(!p.getName().equals(this.killer.getName())) {
+				if(!p.getName().equals(this.client.getName())) {
 					JButton playerButton = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ p.getName() +"<br/><p style='text-align: center'>"+ p.getHealthPoints() +"</p></html>");
+					playerButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							try {
+								Frame.frame.getServiceClient().attack(client.getName(), p.getName());
+							} catch (RemoteException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
 					playerButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 					if(p.getHealthPoints() <= 0) {
 						playerButton.setEnabled(false);

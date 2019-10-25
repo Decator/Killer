@@ -2,13 +2,13 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class Killer extends UnicastRemoteObject implements KillerInterface {
+public class Server extends UnicastRemoteObject implements ServerInterface {
 
 	private static final long serialVersionUID = 1L;
   
 	private ArrayList<PlayerInterface> players = new ArrayList<PlayerInterface>();
 
-	protected Killer() throws RemoteException {
+	protected Server() throws RemoteException {
 		super();
 	}
 
@@ -96,10 +96,8 @@ public class Killer extends UnicastRemoteObject implements KillerInterface {
 			}
 			for(int i=0; i < 4; i++) {
 				if(i == index) {
-					System.out.println("true: "+ this.players.get(i).getName());
 					this.players.get(i).setCurrentPlayer(true);
 				} else {
-					System.out.println("false: "+ this.players.get(i).getName());
 					this.players.get(i).setCurrentPlayer(false);
 				}
 			}
@@ -108,6 +106,25 @@ public class Killer extends UnicastRemoteObject implements KillerInterface {
 			}
 		} else {
 			// GG
+		}
+	}
+
+	@Override
+	public void attack(String attacker, String target) throws RemoteException {
+		PlayerInterface attackerPlayer = null;
+		PlayerInterface targetPlayer = null;
+		for(PlayerInterface p: this.players) {
+			if(p.getName().equals(attacker)) {
+				attackerPlayer = p;
+			}
+			if(p.getName().equals(target)) {
+				targetPlayer = p;
+			}
+		}
+		rollTheDice(6);
+		for(PlayerInterface p: this.players) {
+			System.out.println("Server " + p.getName() + " attack");
+			p.attack(attackerPlayer, targetPlayer);
 		}
 	}
 }

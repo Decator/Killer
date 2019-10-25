@@ -12,7 +12,7 @@ public class JWaiting extends JPanel {
 	}
 	
 	public void waitingLabel() {
-		JLabel waiting = new JLabel(Frame.frame.getServiceClient().getKiller().getWaiting());
+		JLabel waiting = new JLabel(Frame.frame.getServiceClient().getClient().getWaiting());
 		waiting.setBounds(300, 100, 250, 30);
 		this.add(waiting);
 	}

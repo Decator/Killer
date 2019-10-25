@@ -17,10 +17,10 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
-  		<groupId>Killer</groupId>
-  		<artifactId>KillerService</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
+  <dependency>
+  	<groupId>Killer</groupId>
+  	<artifactId>KillerService</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </dependency>
   </dependencies>
 </project>

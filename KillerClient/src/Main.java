@@ -7,11 +7,11 @@ import java.rmi.RemoteException;
 
 public class Main {
 
-	private static KillerInterface look_up;
+	private static ServerInterface look_up;
 	
 	public static void main(String[] args) {
 		try {
-			look_up = (KillerInterface) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
+			look_up = (ServerInterface) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
 			
 			Frame client = new Frame(look_up);
 			client.setVisible(true);

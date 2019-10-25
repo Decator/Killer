@@ -13,4 +13,6 @@ public interface PlayerInterface extends Remote {
 	public void setScore(int score) throws RemoteException;
 	public void endTurn() throws RemoteException;
 	public void setCurrentPlayer(boolean currentPlayer) throws RemoteException;
+	public void setTamponValue(int value) throws RemoteException;
+	public void attack(PlayerInterface attackerPlayer, PlayerInterface targetPlayer) throws RemoteException;
 }
