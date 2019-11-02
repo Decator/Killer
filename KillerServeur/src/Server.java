@@ -105,12 +105,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				this.players.get(i).endTurn();
 			}
 		} else {
-			// GG
+			for(PlayerInterface p: this.players) {
+				p.endGame();
+			}
 		}
 	}
 
 	@Override
-	public void attack(String attacker, String target) throws RemoteException {
+	public void startAttack(String attacker, String target) throws RemoteException {
 		PlayerInterface attackerPlayer = null;
 		PlayerInterface targetPlayer = null;
 		for(PlayerInterface p: this.players) {
@@ -123,8 +125,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 		}
 		rollTheDice(6);
 		for(PlayerInterface p: this.players) {
-			System.out.println("Server " + p.getName() + " attack");
-			p.attack(attackerPlayer, targetPlayer);
+			p.startAttack(attackerPlayer, targetPlayer);
 		}
 	}
 }

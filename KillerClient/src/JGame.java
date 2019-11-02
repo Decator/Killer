@@ -214,7 +214,7 @@ public class JGame extends JPanel {
 					playerButton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							try {
-								Frame.frame.getServiceClient().attack(client.getName(), p.getName());
+								Frame.frame.getServiceClient().startAttack(client.getName(), p.getName());
 							} catch (RemoteException e1) {
 								e1.printStackTrace();
 							}

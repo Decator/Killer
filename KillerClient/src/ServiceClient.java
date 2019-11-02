@@ -59,9 +59,9 @@ public class ServiceClient {
 		}		
 	}
 
-	public void attack(String attacker, String target) {
+	public void startAttack(String attacker, String target) {
 		try {
-			this.service.attack(attacker, target);
+			this.service.startAttack(attacker, target);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

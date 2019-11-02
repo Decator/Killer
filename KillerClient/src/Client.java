@@ -18,7 +18,6 @@ public class Client extends UnicastRemoteObject implements PlayerInterface, Seri
 	private int attack;
 	private PlayerInterface attacker;
 	private PlayerInterface target;
-	private int tampon;
 
 	public Client(String name) throws RemoteException {
 		this.name = name;
@@ -124,29 +123,9 @@ public class Client extends UnicastRemoteObject implements PlayerInterface, Seri
 	public PlayerInterface getTargetPlayer() {
 		return this.target;
 	}
-	
-	public void getTamponValue() {
-		if(this.tampon == -1) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		this.healthPoints -= this.tampon;
-		this.tampon = -1;
-		Frame.frame.getServiceClient().endTurn();
-	}
-	
-	@Override
-	public void setTamponValue(int value) throws RemoteException {
-		this.tampon = value;
-		notify();
-	}
 
 	@Override
-	public void attack(PlayerInterface attacker, PlayerInterface target) throws RemoteException {
-		System.out.println("client attack");
+	public void startAttack(PlayerInterface attacker, PlayerInterface target) throws RemoteException {
 		this.attacker = attacker;
 		this.target = target;
 		if(this.score < 12) {
@@ -156,5 +135,15 @@ public class Client extends UnicastRemoteObject implements PlayerInterface, Seri
 		}
 		this.score = 0;
 		this.observablePlayer.notifyFrame("attack");
+	}
+	
+	@Override
+	public void attack(int damage) throws RemoteException {
+		this.healthPoints -= damage;
+	}
+	
+	@Override
+	public void endGame() throws RemoteException {
+		this.observablePlayer.notifyFrame("endGame");
 	}
 }

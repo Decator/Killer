@@ -35,10 +35,10 @@ public class JAttack extends JPanel {
 		this.scoreLabel = null;
 		this.attackScoreLabel = null;
 		this.numberAttack = 0;
-		
+
 		myPanel();
 		enemyPanel();
-		dicesPanel();
+//		dicesPanel();
 		rollDiceLabel();
 		attackScoreLabel();
 		scoreLabel();
@@ -54,7 +54,6 @@ public class JAttack extends JPanel {
 			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getTargetPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getTargetPlayer().getHealthPoints() +"</p></html>");
 			if(this.client.getTargetPlayer().getName().equals(this.client.getName())) {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
-				this.client.getTamponValue();
 			} else {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
@@ -95,7 +94,7 @@ public class JAttack extends JPanel {
 		for(int i=0; i < this.client.getDices().length; i++) {
 			JLabel dice = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
 			if(this.client.getAttack() == this.client.getDices()[i]) {
-				dice.setBorder(BorderFactory.createLineBorder(Color.red));
+				dice.setBorder(BorderFactory.createLineBorder(Color.blue));
 				this.numberAttack++;
 				this.client.setScore(this.client.getScore() + this.client.getAttack());
 			} else {
@@ -104,8 +103,9 @@ public class JAttack extends JPanel {
 			dice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 			this.dicesPanel.add(dice);
 		}
+		this.scoreLabel();
 		if(this.numberAttack == 0) {
-			
+			this.endTurnLabel();
 		}
 		this.dicesPanel.setBounds(250, 225, 300, 50);
 		this.add(this.dicesPanel);
@@ -123,8 +123,9 @@ public class JAttack extends JPanel {
 		this.rollDiceLabel = new JButton("Lancez les dés");
 		this.rollDiceLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				Frame.frame.getServiceClient().rollTheDice(client.getDices().length - numberAttack);
+				int rollDiceNumber = client.getDices().length - numberAttack;
 				numberAttack = 0;
+				Frame.frame.getServiceClient().rollTheDice(rollDiceNumber);
 			}
 		});
 		try {
@@ -152,10 +153,11 @@ public class JAttack extends JPanel {
 			public void actionPerformed(ActionEvent e){
 				endTurnLabel.setEnabled(false);
 				try {
-					client.getTargetPlayer().setTamponValue(client.getScore());
+					client.getTargetPlayer().attack(client.getScore());
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
+				Frame.frame.getServiceClient().endTurn();
 			}
 		});
 		this.endTurnLabel.setBounds(300, 350, 200, 50);
