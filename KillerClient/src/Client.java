@@ -146,4 +146,10 @@ public class Client extends UnicastRemoteObject implements PlayerInterface, Seri
 	public void endGame() throws RemoteException {
 		this.observablePlayer.notifyFrame("endGame");
 	}
+
+	@Override
+	public void replay() throws RemoteException {
+		this.observablePlayer.notifyFrame("replay");
+		
+	}
 }

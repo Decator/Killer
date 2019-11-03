@@ -66,4 +66,12 @@ public class ServiceClient {
 			e.printStackTrace();
 		}
 	}
+	
+	public void replay() {
+		try {
+			this.service.replay();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 }

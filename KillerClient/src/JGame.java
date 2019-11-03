@@ -204,7 +204,7 @@ public class JGame extends JPanel {
 	}
 	
 	public void attackButton() {
-		this.playersPanel = null;
+		this.remove(this.playersPanel);
 		this.playersPanel = new JPanel();
 		this.playersPanel.setLayout(new GridLayout(1, 3));
 		for(PlayerInterface p: this.client.getPlayers()) {

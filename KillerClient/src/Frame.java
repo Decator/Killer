@@ -15,8 +15,6 @@ public class Frame extends JFrame implements Observer {
 	private JPanel content;
 	private JGame game;
 	private JAttack attack;
-	private JWaiting waiting;
-	private JWinner winner;
 	
 	public Frame(ServerInterface look_up) {
 		super("Killer");
@@ -52,15 +50,11 @@ public class Frame extends JFrame implements Observer {
 		return this.serviceClient;
 	}
 	
-	public JAttack getAttack() {
-		return this.attack;
-	}
-
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg.equals("waiting")) {
-			this.waiting = new JWaiting();
-			this.content.add(this.waiting, "Waiting");
+			JWaiting waiting = new JWaiting();
+			this.content.add(waiting, "Waiting");
 			switchPage("Waiting");
 		} else if(arg.equals("initialisation")) {
 			this.serviceClient.getPlayers();
@@ -90,9 +84,13 @@ public class Frame extends JFrame implements Observer {
 			this.content.add(this.attack, "Attack");
 			switchPage("Attack");
 		} else if(arg.equals("endGame")) {
-			this.winner = new JWinner(this.serviceClient.getClient());
-			this.content.add(this.winner, "Winner");
+			JWinner winner = new JWinner();
+			this.content.add(winner, "Winner");
 			switchPage("Winner");
+		} else if(arg.equals("replay")) {
+			JMenu menu = new JMenu();
+			this.content.add(menu, "Replay");
+			switchPage("Replay");
 		}
 	}
 }

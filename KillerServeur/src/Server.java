@@ -128,4 +128,12 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			p.startAttack(attackerPlayer, targetPlayer);
 		}
 	}
+
+	@Override
+	public void replay() throws RemoteException {
+		for(PlayerInterface p: this.players) {
+			p.replay();
+		}
+		this.players = new ArrayList<PlayerInterface>();
+	}
 }

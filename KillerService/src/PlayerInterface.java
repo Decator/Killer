@@ -16,4 +16,5 @@ public interface PlayerInterface extends Remote {
 	public void startAttack(PlayerInterface attackerPlayer, PlayerInterface targetPlayer) throws RemoteException;
 	public void attack(int damage) throws RemoteException;
 	public void endGame() throws RemoteException;
+	public void replay() throws RemoteException;
 }

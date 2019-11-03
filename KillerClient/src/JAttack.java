@@ -160,6 +160,13 @@ public class JAttack extends JPanel {
 				Frame.frame.getServiceClient().endTurn();
 			}
 		});
+		try {
+			if(!this.client.getName().equals(this.client.getAttackPlayer().getName())) {
+				this.endTurnLabel.setEnabled(false);
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		this.endTurnLabel.setBounds(300, 350, 200, 40);
 		this.add(this.endTurnLabel);
 		this.revalidate();

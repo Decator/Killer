@@ -8,4 +8,5 @@ public interface ServerInterface extends Remote {
    public void setScore(int score) throws RemoteException;
    public void endTurn() throws RemoteException;
    public void startAttack(String attacker, String target) throws RemoteException;
+   public void replay() throws RemoteException;
 }
