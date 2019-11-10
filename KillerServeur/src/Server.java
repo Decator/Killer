@@ -2,48 +2,53 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+/**
+ * The server class. 
+ */
 public class Server extends UnicastRemoteObject implements ServerInterface {
-
-	private static final long serialVersionUID = 1L;
   
-	private ArrayList<PlayerInterface> players = new ArrayList<PlayerInterface>();
+	private ArrayList<ClientInterface> clients = new ArrayList<ClientInterface>();
 
-	protected Server() throws RemoteException {
+	public Server() throws RemoteException {
 		super();
 	}
 
 	@Override
-	public synchronized void addPlayer(PlayerInterface player) throws RemoteException {
+	public synchronized void addClient(ClientInterface client) throws RemoteException {
 		boolean isSameName = false;
-		for(PlayerInterface p: this.players) {
-			if(p.getName().equals(player.getName())) {
-				player.waiting("Un autre joueur utilise déjà ce pseudo ...");
+		for(ClientInterface p: this.clients) {
+			if(p.getPlayer().getName().equals(client.getPlayer().getName())) {
+				client.setServerMessage("Un autre joueur utilise déjà ce pseudo ...");
 				isSameName = true;
 			}
 		}
 		if(!isSameName) {
-			this.players.add(player);
-			if(this.players.size() == 4) {
+			this.clients.add(client);
+			if(this.clients.size() == 4) {
 				int number = (int) (Math.random() * 3.99999);
-				this.players.get(number).setCurrentPlayer(true);
-				for(PlayerInterface p: this.players) {
+				this.clients.get(number).getPlayer().setCurrentPlayer(true);
+				for(ClientInterface p: this.clients) {
 					p.initialisation();
 				}
 			} else {
-				if(this.players.size() > 4) {
-					player.waiting("Une partie est déjà en cours ...");
+				if(this.clients.size() > 4) {
+					client.setServerMessage("Une partie est déjà en cours ...");
 				} else {
-					player.waiting("En attente d'autres joueurs !");
+					client.setServerMessage("En attente d'autres joueurs !");
 				}
 			}
 		}
 	}
   
 	@Override
-	public void getPlayers(String name) throws RemoteException {
-		for(PlayerInterface p: this.players) {
-			if(p.getName().equals(name)) {
-				p.setPlayers(players);
+	/**
+	 * Tell the client the list of all the clients. 
+	 * @param name the client that wants the list of clients
+	 */
+	public void getClients(String name) throws RemoteException {
+		for(ClientInterface p: this.clients) {
+			if(p.getPlayer().getName().equals(name)) {
+				p.setClients(clients);
 			}
 		}
 	}
@@ -54,14 +59,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 		for(int i=0; i < dices.length; i++) {
 			dices[i] = (int) (Math.random() * 5.99999) + 1;
 		}
-		for(PlayerInterface p: this.players) {
+		for(ClientInterface p: this.clients) {
 			p.setDices(dices);
 		}
 	}
 
 	@Override
 	public void setScore(int score) throws RemoteException {
-		for(PlayerInterface p: this.players) {
+		for(ClientInterface p: this.clients) {
 			p.setScore(score);
 		}
 	}
@@ -71,13 +76,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 		int index = 0;
 		int nbLivePlayers = 0;
 		for(int i=0; i < 4; i++) {
-			if(this.players.get(i).getHealthPoints() > 0) {
+			if(this.clients.get(i).getPlayer().getHealthPoints() > 0) {
 				nbLivePlayers++;
 			}
 		}
 		if (nbLivePlayers > 1) {
 			for(int i=0; i < 4; i++) {
-				if(this.players.get(i).getCurrentPlayer()) {
+				if(this.clients.get(i).getPlayer().getCurrentPlayer()) {
 					if( i != 3) {
 						index = i + 1;
 						break;
@@ -85,7 +90,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				}
 			}
 			for(int i=0; i < 2; i++) {
-				if(this.players.get(index).getHealthPoints() <= 0) {
+				if(this.clients.get(index).getPlayer().getHealthPoints() <= 0) {
 					index ++;
 					if(index == 4) {
 						index = 0;
@@ -96,16 +101,16 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			}
 			for(int i=0; i < 4; i++) {
 				if(i == index) {
-					this.players.get(i).setCurrentPlayer(true);
+					this.clients.get(i).getPlayer().setCurrentPlayer(true);
 				} else {
-					this.players.get(i).setCurrentPlayer(false);
+					this.clients.get(i).getPlayer().setCurrentPlayer(false);
 				}
 			}
 			for(int i=0; i < 4; i++) {
-				this.players.get(i).endTurn();
+				this.clients.get(i).endTurn();
 			}
 		} else {
-			for(PlayerInterface p: this.players) {
+			for(ClientInterface p: this.clients) {
 				p.endGame();
 			}
 		}
@@ -113,27 +118,27 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
 	@Override
 	public void startAttack(String attacker, String target) throws RemoteException {
-		PlayerInterface attackerPlayer = null;
-		PlayerInterface targetPlayer = null;
-		for(PlayerInterface p: this.players) {
-			if(p.getName().equals(attacker)) {
+		ClientInterface attackerPlayer = null;
+		ClientInterface targetPlayer = null;
+		for(ClientInterface p: this.clients) {
+			if(p.getPlayer().getName().equals(attacker)) {
 				attackerPlayer = p;
 			}
-			if(p.getName().equals(target)) {
+			if(p.getPlayer().getName().equals(target)) {
 				targetPlayer = p;
 			}
 		}
 		rollTheDice(6);
-		for(PlayerInterface p: this.players) {
+		for(ClientInterface p: this.clients) {
 			p.startAttack(attackerPlayer, targetPlayer);
 		}
 	}
 
 	@Override
 	public void replay() throws RemoteException {
-		for(PlayerInterface p: this.players) {
+		for(ClientInterface p: this.clients) {
 			p.replay();
 		}
-		this.players = new ArrayList<PlayerInterface>();
+		this.clients = new ArrayList<ClientInterface>();
 	}
 }

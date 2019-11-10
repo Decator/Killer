@@ -13,7 +13,7 @@ public class Main {
 		try {
 			look_up = (ServerInterface) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
 			
-			Frame client = new Frame(look_up);
+			MainFrame client = new MainFrame(look_up);
 			client.setVisible(true);
 			
 		} catch (MalformedURLException e) {

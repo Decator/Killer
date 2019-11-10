@@ -6,9 +6,9 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Frame extends JFrame implements Observer {
+public class MainFrame extends JFrame implements Observer {
 
-	public static Frame frame;
+	public static MainFrame frame;
 	
 	public ServiceClient serviceClient;
 	private CardLayout card;
@@ -16,7 +16,7 @@ public class Frame extends JFrame implements Observer {
 	private JGame game;
 	private JAttack attack;
 	
-	public Frame(ServerInterface look_up) {
+	public MainFrame(ServerInterface look_up) {
 		super("Killer");
 		
 		this.serviceClient = new ServiceClient(look_up);
@@ -52,13 +52,13 @@ public class Frame extends JFrame implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		if(arg.equals("waiting")) {
-			JWaiting waiting = new JWaiting();
-			this.content.add(waiting, "Waiting");
-			switchPage("Waiting");
+		if(arg.equals("message")) {
+			JMessage message = new JMessage();
+			this.content.add(message, "Message");
+			switchPage("Message");
 		} else if(arg.equals("initialisation")) {
-			this.serviceClient.getPlayers();
-		} else if(arg.equals("setPlayers")) {
+			this.serviceClient.getClients();
+		} else if(arg.equals("setClients")) {
 			if(this.game != null) {
 				this.content.remove(this.game);
 			}

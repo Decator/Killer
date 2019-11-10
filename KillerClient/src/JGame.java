@@ -46,8 +46,8 @@ public class JGame extends JPanel {
 		this.myPanel = new JPanel();
 		this.myPanel.setLayout(new GridLayout(1, 1));
 		try {
-			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getName() +"<br/><p style='text-align: center'>"+ this.client.getHealthPoints() +"</p></html>");
-			if(this.client.getCurrentPlayer()) {
+			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getPlayer().getHealthPoints() +"</p></html>");
+			if(this.client.getPlayer().getCurrentPlayer()) {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
 			} else {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -64,11 +64,11 @@ public class JGame extends JPanel {
 	public void playersPanel() {
 		this.playersPanel = new JPanel();
 		this.playersPanel.setLayout(new GridLayout(1, 3));
-		for(PlayerInterface p: this.client.getPlayers()) {
+		for(ClientInterface p: this.client.getClients()) {
 			try {
-				if(!p.getName().equals(this.client.getName())) {
-					JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ p.getName() +"<br/><p style='text-align: center'>"+ p.getHealthPoints() +"</p></html>");
-					if(p.getCurrentPlayer()) {
+				if(!p.getPlayer().getName().equals(this.client.getPlayer().getName())) {
+					JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ p.getPlayer().getName() +"<br/><p style='text-align: center'>"+ p.getPlayer().getHealthPoints() +"</p></html>");
+					if(p.getPlayer().getCurrentPlayer()) {
 						playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
 					} else {
 						playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -85,91 +85,103 @@ public class JGame extends JPanel {
 	}
 	
 	public void rollDiceLabel() {
-		if(this.endTurnLabel != null) {
-			this.remove(this.endTurnLabel);
-		}
-		if(this.rollDiceLabel != null) {
-			this.remove(this.rollDiceLabel);
-		}
-		this.rollDiceLabel = new JButton("Lancez les dés");
-		this.rollDiceLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				Frame.frame.getServiceClient().rollTheDice(client.getDices().length - numberClick);
-				numberClick = 0;
-				rollDiceLabel.setEnabled(false);
+		try {
+			if(this.endTurnLabel != null) {
+				this.remove(this.endTurnLabel);
 			}
-		});
-		if(!this.client.getCurrentPlayer()) {
-			this.rollDiceLabel.setEnabled(false);
+			if(this.rollDiceLabel != null) {
+				this.remove(this.rollDiceLabel);
+			}
+			this.rollDiceLabel = new JButton("Lancez les dés");
+			this.rollDiceLabel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e){
+					MainFrame.frame.getServiceClient().rollTheDice(client.getDices().length - numberClick);
+					numberClick = 0;
+					rollDiceLabel.setEnabled(false);
+				}
+			});
+			if(!this.client.getPlayer().getCurrentPlayer()) {
+				this.rollDiceLabel.setEnabled(false);
+			}
+			this.rollDiceLabel.setBounds(300, 500, 200, 50);
+			this.add(this.rollDiceLabel);
+			
+			this.revalidate();
+			this.repaint();
+		} catch(RemoteException e) {
+			e.printStackTrace();
 		}
-		this.rollDiceLabel.setBounds(300, 500, 200, 50);
-		this.add(this.rollDiceLabel);
-		
-		this.revalidate();
-		this.repaint();
 	}
 	
 	public void endTurnLabel() {
-		if(this.endTurnLabel != null) {
-			this.remove(this.endTurnLabel);
-		}
-		if(this.rollDiceLabel != null) {
-			this.remove(this.rollDiceLabel);
-		}
-		this.endTurnLabel = new JButton("Fin du tour");
-		this.endTurnLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				endRoll();
-				numberClick = 0;
-				endTurnLabel.setEnabled(false);
+		try {
+			if(this.endTurnLabel != null) {
+				this.remove(this.endTurnLabel);
 			}
-		});
-		if(!this.client.getCurrentPlayer()) {
-			this.endTurnLabel.setEnabled(false);
+			if(this.rollDiceLabel != null) {
+				this.remove(this.rollDiceLabel);
+			}
+			this.endTurnLabel = new JButton("Fin du tour");
+			this.endTurnLabel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e){
+					endRoll();
+					numberClick = 0;
+					endTurnLabel.setEnabled(false);
+				}
+			});
+			if(!this.client.getPlayer().getCurrentPlayer()) {
+				this.endTurnLabel.setEnabled(false);
+			}
+			this.endTurnLabel.setBounds(300, 500, 200, 50);
+			this.add(this.endTurnLabel);
+			
+			this.revalidate();
+			this.repaint();
+		} catch(RemoteException e) {
+			e.printStackTrace();
 		}
-		this.endTurnLabel.setBounds(300, 500, 200, 50);
-		this.add(this.endTurnLabel);
-		
-		this.revalidate();
-		this.repaint();
 	}
 	
 	public void dicesPanel() {
-		if(this.dicesPanel != null) {
-			this.remove(this.dicesPanel);
-		}
-		this.dicesPanel = new JPanel();
-		this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
-		
-		if(this.client.getCurrentPlayer()) {
-			for(int i=0; i < this.client.getDices().length; i++) {
-				JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
-				dice.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e){
-						Frame.frame.getServiceClient().setScore(dice);
-						numberClick++;
-						dice.setEnabled(false);
-						if(client.getDices().length - numberClick <= 0) {
-							endTurnLabel();
-						} else {
-							rollDiceLabel.setEnabled(true);
+		try {
+			if(this.dicesPanel != null) {
+				this.remove(this.dicesPanel);
+			}
+			this.dicesPanel = new JPanel();
+			this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
+			
+			if(this.client.getPlayer().getCurrentPlayer()) {
+				for(int i=0; i < this.client.getDices().length; i++) {
+					JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
+					dice.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e){
+							MainFrame.frame.getServiceClient().setScore(dice);
+							numberClick++;
+							dice.setEnabled(false);
+							if(client.getDices().length - numberClick <= 0) {
+								endTurnLabel();
+							} else {
+								rollDiceLabel.setEnabled(true);
+							}
 						}
-					}
-				});
-				this.dicesPanel.add(dice);
+					});
+					this.dicesPanel.add(dice);
+				}
+			} else {
+				for(int i=0; i < this.client.getDices().length; i++) {
+					JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
+					dice.setEnabled(false);
+					this.dicesPanel.add(dice);
+				}
 			}
-		} else {
-			for(int i=0; i < this.client.getDices().length; i++) {
-				JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
-				dice.setEnabled(false);
-				this.dicesPanel.add(dice);
-			}
+			this.dicesPanel.setBounds(250, 275, 300, 50);
+			this.add(this.dicesPanel);
+			
+			this.revalidate();
+			this.repaint();
+		} catch(RemoteException e) {
+			e.printStackTrace();
 		}
-		this.dicesPanel.setBounds(250, 275, 300, 50);
-		this.add(this.dicesPanel);
-		
-		this.revalidate();
-		this.repaint();
 	}
 	
 	public void scoreLabel() {
@@ -186,17 +198,17 @@ public class JGame extends JPanel {
 	public void endRoll() {
 		try {
 			int losePoint = 0;
-			if((this.client.getHealthPoints() + this.client.getScore() - 30) >= (this.client.getHealthPoints() - this.client.getScore() + 12)) {
-				losePoint = this.client.getHealthPoints() + this.client.getScore() - 30;
+			if((this.client.getPlayer().getHealthPoints() + this.client.getScore() - 30) >= (this.client.getPlayer().getHealthPoints() - this.client.getScore() + 12)) {
+				losePoint = this.client.getPlayer().getHealthPoints() + this.client.getScore() - 30;
 			} else {
-				losePoint = this.client.getHealthPoints() - this.client.getScore() + 12;
+				losePoint = this.client.getPlayer().getHealthPoints() - this.client.getScore() + 12;
 			}
-			this.client.setHealthPoints(losePoint);
+			this.client.getPlayer().setHealthPoints(losePoint);
 			
 			if (this.client.getScore() < 12 || this.client.getScore() > 30) {
 				attackButton();
 			} else {
-				Frame.frame.getServiceClient().endTurn();
+				MainFrame.frame.getServiceClient().endTurn();
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -207,21 +219,21 @@ public class JGame extends JPanel {
 		this.remove(this.playersPanel);
 		this.playersPanel = new JPanel();
 		this.playersPanel.setLayout(new GridLayout(1, 3));
-		for(PlayerInterface p: this.client.getPlayers()) {
+		for(ClientInterface p: this.client.getClients()) {
 			try {
-				if(!p.getName().equals(this.client.getName())) {
-					JButton playerButton = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ p.getName() +"<br/><p style='text-align: center'>"+ p.getHealthPoints() +"</p></html>");
+				if(!p.getPlayer().getName().equals(this.client.getPlayer().getName())) {
+					JButton playerButton = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ p.getPlayer().getName() +"<br/><p style='text-align: center'>"+ p.getPlayer().getHealthPoints() +"</p></html>");
 					playerButton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							try {
-								Frame.frame.getServiceClient().startAttack(client.getName(), p.getName());
+								MainFrame.frame.getServiceClient().startAttack(client.getPlayer().getName(), p.getPlayer().getName());
 							} catch (RemoteException e1) {
 								e1.printStackTrace();
 							}
 						}
 					});
 					playerButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-					if(p.getHealthPoints() <= 0) {
+					if(p.getPlayer().getHealthPoints() <= 0) {
 						playerButton.setEnabled(false);
 					}
 					this.playersPanel.add(playerButton);

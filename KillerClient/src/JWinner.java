@@ -22,7 +22,7 @@ public class JWinner extends JPanel {
 	public void winnerLoserLabel() {
 		JLabel winnerLoser = null;
 		try {
-			if(Frame.frame.getServiceClient().getClient().getHealthPoints() > 0) {
+			if(MainFrame.frame.getServiceClient().getClient().getPlayer().getHealthPoints() > 0) {
 				winnerLoser = new JLabel("Bravo vous avez gagné !");
 			} else {
 				winnerLoser = new JLabel("Dommage, vous avez perdu ...");
@@ -38,7 +38,7 @@ public class JWinner extends JPanel {
 		JButton replayButton = new JButton("Rejouer");
 		replayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				Frame.frame.getServiceClient().replay();
+				MainFrame.frame.getServiceClient().replay();
 			}
 		});
 		replayButton.setBounds(300, 150, 200, 50);

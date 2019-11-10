@@ -2,24 +2,31 @@ import java.rmi.RemoteException;import java.util.ArrayList;
 
 import javax.swing.JButton;
 
+/**
+ * This class allows the Client and the Server to communicate. 
+ */
 public class ServiceClient {
-	private ServerInterface service;
+	private ServerInterface server;
 	private Client client;
-	private ArrayList<PlayerInterface> players;
+	private ArrayList<ClientInterface> clients;
 	
-	ServiceClient(ServerInterface service) {
-		this.service = service;
+	ServiceClient(ServerInterface server) {
+		this.server = server;
 	}
 	
 	public Client getClient() {
 		return this.client;
 	}
 	
-	public void addPlayer(String name) {
+	/**
+	 * Create a new Client and initialize the Observer. 
+	 * @param name the name of the client's player. 
+	 */
+	public void addClient(String name) {
 		try {
 			this.client = new Client(name);
-			this.client.getObservablePlayer().addObserver(Frame.frame);
-			this.service.addPlayer(client);
+			this.client.getObservableClient().addObserver(MainFrame.frame);
+			this.server.addClient(client);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -27,9 +34,9 @@ public class ServiceClient {
 		}
 	}
 	
-	public void getPlayers() {
+	public void getClients() {
 		try {
-			this.service.getPlayers(this.client.getName());
+			this.server.getClients(this.client.getPlayer().getName());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +44,7 @@ public class ServiceClient {
 	
 	public void rollTheDice(int diceNumber) {
 		try {
-			this.service.rollTheDice(diceNumber);
+			this.server.rollTheDice(diceNumber);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -45,7 +52,7 @@ public class ServiceClient {
 	
 	public void setScore(JButton b) {
 		try {
-			this.service.setScore(Integer.parseInt(b.getText().split(">")[2].split("<")[0]) + this.client.getScore());
+			this.server.setScore(Integer.parseInt(b.getText().split(">")[2].split("<")[0]) + this.client.getScore());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +60,7 @@ public class ServiceClient {
 
 	public void endTurn() {
 		try {
-			this.service.endTurn();
+			this.server.endTurn();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}		
@@ -61,7 +68,7 @@ public class ServiceClient {
 
 	public void startAttack(String attacker, String target) {
 		try {
-			this.service.startAttack(attacker, target);
+			this.server.startAttack(attacker, target);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +76,7 @@ public class ServiceClient {
 	
 	public void replay() {
 		try {
-			this.service.replay();
+			this.server.replay();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

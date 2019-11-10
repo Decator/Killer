@@ -51,8 +51,8 @@ public class JAttack extends JPanel {
 		this.enemyPanel = new JPanel();
 		this.enemyPanel.setLayout(new GridLayout(1, 1));
 		try {
-			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getTargetPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getTargetPlayer().getHealthPoints() +"</p></html>");
-			if(this.client.getTargetPlayer().getName().equals(this.client.getName())) {
+			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getTargetPlayer().getPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getTargetPlayer().getPlayer().getHealthPoints() +"</p></html>");
+			if(this.client.getTargetPlayer().getPlayer().getName().equals(this.client.getPlayer().getName())) {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
 			} else {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -70,8 +70,8 @@ public class JAttack extends JPanel {
 		this.myPanel = new JPanel();
 		this.myPanel.setLayout(new GridLayout(1, 1));
 		try {
-			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getAttackPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getAttackPlayer().getHealthPoints() +"</p></html>");
-			if(this.client.getAttackPlayer().getName().equals(this.client.getName())) {
+			JLabel playerLabel = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getAttackPlayer().getPlayer().getName() +"<br/><p style='text-align: center'>"+ this.client.getAttackPlayer().getPlayer().getHealthPoints() +"</p></html>");
+			if(this.client.getAttackPlayer().getPlayer().getName().equals(this.client.getPlayer().getName())) {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.red));
 			} else {
 				playerLabel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -125,11 +125,11 @@ public class JAttack extends JPanel {
 			public void actionPerformed(ActionEvent e){
 				int rollDiceNumber = client.getDices().length - numberAttack;
 				numberAttack = 0;
-				Frame.frame.getServiceClient().rollTheDice(rollDiceNumber);
+				MainFrame.frame.getServiceClient().rollTheDice(rollDiceNumber);
 			}
 		});
 		try {
-			if(!this.client.getName().equals(this.client.getAttackPlayer().getName())) {
+			if(!this.client.getPlayer().getName().equals(this.client.getAttackPlayer().getPlayer().getName())) {
 				this.rollDiceLabel.setEnabled(false);
 			}
 		} catch (RemoteException e) {
@@ -157,11 +157,11 @@ public class JAttack extends JPanel {
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
-				Frame.frame.getServiceClient().endTurn();
+				MainFrame.frame.getServiceClient().endTurn();
 			}
 		});
 		try {
-			if(!this.client.getName().equals(this.client.getAttackPlayer().getName())) {
+			if(!this.client.getPlayer().getName().equals(this.client.getAttackPlayer().getPlayer().getName())) {
 				this.endTurnLabel.setEnabled(false);
 			}
 		} catch (RemoteException e) {

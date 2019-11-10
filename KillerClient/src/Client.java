@@ -3,129 +3,79 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-	  
-public class Client extends UnicastRemoteObject implements PlayerInterface, Serializable {
-	private static final long serialVersionUID = 1L;
+
+/**
+ * The Client class contains the Player and the game's information. 
+ */
+public class Client extends UnicastRemoteObject implements ClientInterface, Serializable {
 	
-	private String name;
-	private int healthPoints;
-	private ObservablePlayer observablePlayer;
-	private String waiting;
-	private boolean currentPlayer;
-	private ArrayList<PlayerInterface> players;
+	/**
+	 * The dices of the current player. 
+	 */
 	private int[] dices;
+	
+	/**
+	 * The score of the current player. 
+	 */
 	private int score;
+	
+	/**
+	 * The clients Observable. 
+	 */
+	private ObservableClient observableClient;
+	
+	/**
+	 * A message from the server. 
+	 */
+	private String serverMessage;
+	
+	/**
+	 * A list of all the clients. 
+	 */
+	private ArrayList<ClientInterface> clients;
+	
+	/**
+	 * The amount of the attack damage. 
+	 */
 	private int attack;
-	private PlayerInterface attacker;
-	private PlayerInterface target;
+	
+	/**
+	 * The attacking client. 
+	 */
+	private ClientInterface attacker;
+	
+	/**
+	 * The target client. 
+	 */
+	private ClientInterface target;
+
+	/**
+	 * The clients player. 
+	 */
+	private Player player;
 
 	public Client(String name) throws RemoteException {
-		this.name = name;
-		this.healthPoints = 30;
-		this.waiting = "";
-		this.currentPlayer = false;
-		this.players = new ArrayList<PlayerInterface>();
+		this.player = new Player(name);
+		this.serverMessage = "";
+		this.clients = new ArrayList<ClientInterface>();
 		this.dices = new int[6];
 		this.score = 0;
 		this.attack = 0;
 		
-		this.observablePlayer = new ObservablePlayer();
-	}
-
-	public ObservablePlayer getObservablePlayer() {
-		return this.observablePlayer;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-	
-	@Override
-	public boolean getCurrentPlayer() {
-		return this.currentPlayer;
-	}
-	
-	@Override
-	public int getHealthPoints() throws RemoteException {
-		return healthPoints;
-	}
-
-	public void setHealthPoints(int healthPoints) throws RemoteException {
-		this.healthPoints = healthPoints;
-	}
-
-	@Override
-	public void waiting(String msg) throws RemoteException {
-		this.waiting = msg;
-		this.observablePlayer.notifyFrame("waiting");
+		this.observableClient = new ObservableClient();
 	}
 
 	@Override
 	public void initialisation() throws RemoteException {
-		this.observablePlayer.notifyFrame("initialisation");
-	}
-	
-	public String getWaiting() {
-		return this.waiting;
-	}
-	
-	@Override
-	public void setPlayers(ArrayList<PlayerInterface> players) {
-		this.players = players;
-		this.observablePlayer.notifyFrame("setPlayers");
-	}
-	
-	public ArrayList<PlayerInterface> getPlayers() {
-		return this.players;
-	}
-	
-	@Override
-	public void setDices(int[] dices) {
-		this.dices = dices;
-		this.observablePlayer.notifyFrame("rollTheDice");
-	}
-	
-	public int[] getDices() {
-		return this.dices;
-	}
-	
-	@Override
-	public void setScore(int score) {
-		this.score = score;
-		this.observablePlayer.notifyFrame("score");
-	}
-	
-	public int getScore() {
-		return this.score;
-	}
-	
-	public int getAttack() {
-		return this.attack;
-	}
-	
-	@Override
-	public void endTurn() throws RemoteException {
-		this.dices = new int[6];
-		this.score = 0;
-		this.observablePlayer.notifyFrame("initialisation");
+		this.observableClient.notifyFrame("initialisation");
 	}
 
 	@Override
-	public void setCurrentPlayer(boolean currentPlayer) throws RemoteException {
-		this.currentPlayer = currentPlayer;
-	}
-	
-	public PlayerInterface getAttackPlayer() {
-		return this.attacker;
-	}
-	
-	public PlayerInterface getTargetPlayer() {
-		return this.target;
-	}
-
-	@Override
-	public void startAttack(PlayerInterface attacker, PlayerInterface target) throws RemoteException {
+	/**
+	 * Initialize the attack. 
+	 * Set the attacking and target players, set the attack damage amount and reset the score. 
+	 */
+	public void startAttack(ClientInterface attacker, ClientInterface target) throws RemoteException {
 		this.attacker = attacker;
 		this.target = target;
 		if(this.score < 12) {
@@ -134,22 +84,93 @@ public class Client extends UnicastRemoteObject implements PlayerInterface, Seri
 			this.attack = this.score - 30;
 		}
 		this.score = 0;
-		this.observablePlayer.notifyFrame("attack");
+		this.observableClient.notifyFrame("attack");
 	}
 	
 	@Override
+	/**
+	 * Finish the attack.
+	 * Take the damage. 
+	 */
 	public void attack(int damage) throws RemoteException {
-		this.healthPoints -= damage;
+		this.player.setHealthPoints(this.player.getHealthPoints() - damage);
+	}
+	
+	@Override
+	public void endTurn() throws RemoteException {
+		this.dices = new int[6];
+		this.score = 0;
+		this.observableClient.notifyFrame("initialisation");
 	}
 	
 	@Override
 	public void endGame() throws RemoteException {
-		this.observablePlayer.notifyFrame("endGame");
+		this.observableClient.notifyFrame("endGame");
 	}
 
 	@Override
 	public void replay() throws RemoteException {
-		this.observablePlayer.notifyFrame("replay");
-		
+		this.observableClient.notifyFrame("replay");
+	}
+
+	public ObservableClient getObservableClient() {
+		return this.observableClient;
+	}
+
+	@Override
+	public PlayerInterface getPlayer() throws RemoteException {
+		return this.player;
+	}
+
+	public String getServerMessage() {
+		return this.serverMessage;
+	}
+	
+	@Override
+	public void setServerMessage(String msg) throws RemoteException {
+		this.serverMessage = msg;
+		this.observableClient.notifyFrame("message");
+	}
+	
+	public ArrayList<ClientInterface> getClients() {
+		return this.clients;
+	}
+	
+	@Override
+	public void setClients(ArrayList<ClientInterface> clients) {
+		this.clients = clients;
+		this.observableClient.notifyFrame("setClients");
+	}
+	
+	public int[] getDices() {
+		return this.dices;
+	}
+	
+	@Override
+	public void setDices(int[] dices) {
+		this.dices = dices;
+		this.observableClient.notifyFrame("rollTheDice");
+	}
+	
+	public int getScore() {
+		return this.score;
+	}
+	
+	@Override
+	public void setScore(int score) {
+		this.score = score;
+		this.observableClient.notifyFrame("score");
+	}
+	
+	public int getAttack() {
+		return this.attack;
+	}
+	
+	public ClientInterface getAttackPlayer() {
+		return this.attacker;
+	}
+	
+	public ClientInterface getTargetPlayer() {
+		return this.target;
 	}
 }
