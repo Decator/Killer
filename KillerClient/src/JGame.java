@@ -92,7 +92,7 @@ public class JGame extends JPanel {
 			if(this.rollDiceLabel != null) {
 				this.remove(this.rollDiceLabel);
 			}
-			this.rollDiceLabel = new JButton("Lancez les dés");
+			this.rollDiceLabel = new JButton("Lancez les dÃ©s");
 			this.rollDiceLabel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e){
 					MainFrame.frame.getServiceClient().rollTheDice(client.getDices().length - numberClick);

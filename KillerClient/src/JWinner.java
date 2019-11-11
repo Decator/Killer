@@ -23,7 +23,7 @@ public class JWinner extends JPanel {
 		JLabel winnerLoser = null;
 		try {
 			if(MainFrame.frame.getServiceClient().getClient().getPlayer().getHealthPoints() > 0) {
-				winnerLoser = new JLabel("Bravo vous avez gagné !");
+				winnerLoser = new JLabel("Bravo vous avez gagnÃ© !");
 			} else {
 				winnerLoser = new JLabel("Dommage, vous avez perdu ...");
 			}

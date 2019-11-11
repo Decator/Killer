@@ -18,7 +18,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 		boolean isSameName = false;
 		for(ClientInterface p: this.clients) {
 			if(p.getPlayer().getName().equals(client.getPlayer().getName())) {
-				client.setServerMessage("Un autre joueur utilise déjà ce pseudo ...");
+				client.setServerMessage("Un autre joueur utilise dÃ©jÃ  ce pseudo ...");
 				isSameName = true;
 			}
 		}
@@ -32,7 +32,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				}
 			} else {
 				if(this.clients.size() > 4) {
-					client.setServerMessage("Une partie est déjà en cours ...");
+					client.setServerMessage("Une partie est dÃ©jÃ  en cours ...");
 				} else {
 					client.setServerMessage("En attente d'autres joueurs !");
 				}
