@@ -1,10 +1,13 @@
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +41,6 @@ public class JAttack extends JPanel {
 
 		myPanel();
 		enemyPanel();
-//		dicesPanel();
 		rollDiceLabel();
 		attackScoreLabel();
 		scoreLabel();
@@ -92,13 +94,20 @@ public class JAttack extends JPanel {
 		this.dicesPanel = new JPanel();
 		this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
 		for(int i=0; i < this.client.getDices().length; i++) {
-			JLabel dice = new JLabel("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
+			JButton dice = new JButton();
+			try {
+				Image img = ImageIO.read(getClass().getResource("resources/dice_"+ this.client.getDices()[i] +".png"));
+			    Image imgResize = img.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH) ; 
+			    dice.setIcon(new ImageIcon(imgResize));
+			} catch (Exception ex) {
+			    System.out.println(ex);
+			}
+			dice.setBorderPainted(false);
+			dice.setContentAreaFilled(false);
 			if(this.client.getAttack() == this.client.getDices()[i]) {
-				dice.setBorder(BorderFactory.createLineBorder(Color.blue));
+				dice.setEnabled(false);
 				this.numberAttack++;
 				this.client.setScore(this.client.getScore() + this.client.getAttack());
-			} else {
-				dice.setBorder(BorderFactory.createLineBorder(Color.black));
 			}
 			dice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 			this.dicesPanel.add(dice);
@@ -120,7 +129,7 @@ public class JAttack extends JPanel {
 		if(this.rollDiceLabel != null) {
 			this.remove(this.rollDiceLabel);
 		}
-		this.rollDiceLabel = new JButton("Lancez les dés");
+		this.rollDiceLabel = new JButton("Lancez les des");
 		this.rollDiceLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				int rollDiceNumber = client.getDices().length - numberAttack;

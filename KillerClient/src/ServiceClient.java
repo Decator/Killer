@@ -50,9 +50,9 @@ public class ServiceClient {
 		}
 	}
 	
-	public void setScore(JButton b) {
+	public void setScore(int score) {
 		try {
-			this.server.setScore(Integer.parseInt(b.getText().split(">")[2].split("<")[0]) + this.client.getScore());
+			this.server.setScore(score + this.client.getScore());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

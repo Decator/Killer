@@ -59,11 +59,7 @@ public class MainFrame extends JFrame implements Observer {
 		} else if(arg.equals("initialisation")) {
 			this.serviceClient.getClients();
 		} else if(arg.equals("setClients")) {
-			if(this.game != null) {
-				this.content.remove(this.game);
-			}
 			if(this.attack != null) {
-				this.content.remove(this.attack);
 				this.attack = null;
 			}
 			this.game = new JGame(this.serviceClient.getClient());
@@ -77,9 +73,6 @@ public class MainFrame extends JFrame implements Observer {
 		} else if(arg.equals("score")) {
 			this.game.scoreLabel();
 		} else if(arg.equals("attack")) {
-			if(this.attack != null) {
-				this.content.remove(this.attack);
-			}
 			this.attack = new JAttack(this.serviceClient.getClient());
 			this.content.add(this.attack, "Attack");
 			switchPage("Attack");

@@ -1,10 +1,13 @@
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -84,6 +87,67 @@ public class JGame extends JPanel {
 		this.add(this.playersPanel);
 	}
 	
+	public void dicesPanel() {
+		try {
+			if(this.dicesPanel != null) {
+				this.remove(this.dicesPanel);
+			}
+			this.dicesPanel = new JPanel();
+			this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
+			
+			if(this.client.getPlayer().getCurrentPlayer()) {
+				for(int i=0; i < this.client.getDices().length; i++) {
+					int score = this.client.getDices()[i];
+					JButton dice = new JButton();
+					try {
+						Image img = ImageIO.read(getClass().getResource("resources/dice_"+ this.client.getDices()[i] +".png"));
+					    Image imgResize = img.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH) ; 
+					    dice.setIcon(new ImageIcon(imgResize));
+					} catch (Exception ex) {
+					    System.out.println(ex);
+					}
+					dice.setBorderPainted(false);
+					dice.setContentAreaFilled(false);
+					dice.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e){
+							MainFrame.frame.getServiceClient().setScore(score);
+							numberClick++;
+							dice.setEnabled(false);
+							if(client.getDices().length - numberClick <= 0) {
+								endTurnLabel();
+							} else {
+								rollDiceLabel.setEnabled(true);
+							}
+						}
+					});
+					this.dicesPanel.add(dice);
+				}
+			} else {
+				for(int i=0; i < this.client.getDices().length; i++) {
+					JButton dice = new JButton();
+					try {
+						Image img = ImageIO.read(getClass().getResource("resources/dice_"+ this.client.getDices()[i] +".png"));
+					    Image imgResize = img.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH) ; 
+					    dice.setIcon(new ImageIcon(imgResize));
+					} catch (Exception ex) {
+					    System.out.println(ex);
+					}
+					dice.setBorderPainted(false);
+					dice.setContentAreaFilled(false);
+					dice.setEnabled(false);
+					this.dicesPanel.add(dice);
+				}
+			}
+			this.dicesPanel.setBounds(250, 275, 300, 50);
+			this.add(this.dicesPanel);
+			
+			this.revalidate();
+			this.repaint();
+		} catch(RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void rollDiceLabel() {
 		try {
 			if(this.endTurnLabel != null) {
@@ -92,7 +156,7 @@ public class JGame extends JPanel {
 			if(this.rollDiceLabel != null) {
 				this.remove(this.rollDiceLabel);
 			}
-			this.rollDiceLabel = new JButton("Lancez les dés");
+			this.rollDiceLabel = new JButton("Lancez les des");
 			this.rollDiceLabel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e){
 					MainFrame.frame.getServiceClient().rollTheDice(client.getDices().length - numberClick);
@@ -134,48 +198,6 @@ public class JGame extends JPanel {
 			}
 			this.endTurnLabel.setBounds(300, 500, 200, 50);
 			this.add(this.endTurnLabel);
-			
-			this.revalidate();
-			this.repaint();
-		} catch(RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void dicesPanel() {
-		try {
-			if(this.dicesPanel != null) {
-				this.remove(this.dicesPanel);
-			}
-			this.dicesPanel = new JPanel();
-			this.dicesPanel.setLayout(new GridLayout(1, this.client.getDices().length));
-			
-			if(this.client.getPlayer().getCurrentPlayer()) {
-				for(int i=0; i < this.client.getDices().length; i++) {
-					JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
-					dice.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e){
-							MainFrame.frame.getServiceClient().setScore(dice);
-							numberClick++;
-							dice.setEnabled(false);
-							if(client.getDices().length - numberClick <= 0) {
-								endTurnLabel();
-							} else {
-								rollDiceLabel.setEnabled(true);
-							}
-						}
-					});
-					this.dicesPanel.add(dice);
-				}
-			} else {
-				for(int i=0; i < this.client.getDices().length; i++) {
-					JButton dice = new JButton("<html><p style='text-align: center; font-weight: bold;'>"+ this.client.getDices()[i] +"</p></html>");
-					dice.setEnabled(false);
-					this.dicesPanel.add(dice);
-				}
-			}
-			this.dicesPanel.setBounds(250, 275, 300, 50);
-			this.add(this.dicesPanel);
 			
 			this.revalidate();
 			this.repaint();
