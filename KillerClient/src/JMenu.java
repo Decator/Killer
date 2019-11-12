@@ -67,7 +67,7 @@ public class JMenu extends JPanel {
 		rulesPanel.add(rulesLabel3);
 		JLabel rulesLabel4 = new JLabel(" Lorsque vous n'avez plus de des :");
 		rulesPanel.add(rulesLabel4);
-		JLabel rulesLabel5 = new JLabel("     - Si votre score est superieur a 12 ou inferieur a 30 alors vos points de vies diminuerons de la difference.");
+		JLabel rulesLabel5 = new JLabel("     - Si votre score est superieur a 12 ou inferieur a 30 alors vos points de vie diminueront de la difference.");
 		rulesPanel.add(rulesLabel5);
 		JLabel rulesLabel6 = new JLabel("     - Sinon, vos points de vie augmenterons de la difference. De plus, vous pourrez attaquer un adversaire.");
 		rulesPanel.add(rulesLabel6);
