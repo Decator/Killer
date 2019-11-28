@@ -23,7 +23,7 @@ Les instances d'objet sont distants étant donné que nous utilisons l'interface
 
 ## Lancer le jeu
 
-Pour lancer le jeu, il faut d'abord lancer le serveur (Class "Main" côté serveur) puis lancer plusieurs clients (Class "Main" côté client). La partie se lancera lorsque 4 clients auront rejoint la partie.
+Pour lancer le jeu, il faut d'abord lancer Server.jar puis lancer quatre fois Client.jar. La partie se lancera lorsque 4 clients auront rejoint la partie.
 
 ## Règles du jeu
 
