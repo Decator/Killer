@@ -6,12 +6,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class Main {
-
-	private static ServerInterface look_up;
 	
 	public static void main(String[] args) {
 		try {
-			look_up = (ServerInterface) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
+			ServerInterface look_up = (ServerInterface) Naming.lookup("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI"); // To change
 			
 			MainFrame client = new MainFrame(look_up);
 			client.setVisible(true);
